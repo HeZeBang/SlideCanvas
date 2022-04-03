@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlideCanvas", "SlideCanvas.csproj", "{787F98FF-26E5-40D3-9530-C4EE7E474B66}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{787F98FF-26E5-40D3-9530-C4EE7E474B66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{787F98FF-26E5-40D3-9530-C4EE7E474B66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{787F98FF-26E5-40D3-9530-C4EE7E474B66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{787F98FF-26E5-40D3-9530-C4EE7E474B66}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0286528F-341C-4C78-B13A-3B6372716AF7}
+	EndGlobalSection
+EndGlobal

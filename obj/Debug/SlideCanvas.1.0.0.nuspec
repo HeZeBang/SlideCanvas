@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>SlideCanvas</id>
+    <version>1.0.0</version>
+    <authors>SlideCanvas</authors>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework="net6.0-windows10.0.18362">
+        <dependency id="Microsoft.AspNetCore.Owin" version="6.0.3" exclude="Build,Analyzers" />
+        <dependency id="ModernWpfUI" version="0.9.4" exclude="Build,Analyzers" />
+        <dependency id="QRCoder" version="1.4.3" exclude="Build,Analyzers" />
+        <dependency id="SkiaSharp.QrCode" version="0.4.1" exclude="Build,Analyzers" />
+        <dependency id="Zack.ComObjectHelpers" version="1.0.3" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework="net6.0-windows10.0.18362">
+        <frameworkReference name="Microsoft.WindowsDesktop.App" />
+      </group>
+    </frameworkReferences>
+  </metadata>
+  <files>
+    <file src="D:\Codes\SlideCanvas\bin\Debug\net6.0-windows10.0.18362.0\SlideCanvas.runtimeconfig.json" target="lib\net6.0-windows10.0.18362\SlideCanvas.runtimeconfig.json" />
+    <file src="D:\Codes\SlideCanvas\bin\Debug\net6.0-windows10.0.18362.0\SlideCanvas.dll" target="lib\net6.0-windows10.0.18362\SlideCanvas.dll" />
+  </files>
+</package>
