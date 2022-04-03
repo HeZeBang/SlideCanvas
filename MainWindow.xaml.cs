@@ -25,6 +25,7 @@ namespace SlideCanvas
         public MainWindow()
         {
             InitializeComponent();
+            this.btnArr.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./Resources/#iconfont");
             bdrPenSet.Visibility = Visibility.Collapsed;
             this.sldSize.Minimum = InkCanvasMain.DefaultDrawingAttributes.Width;
             var drawingAttributes = new DrawingAttributes()
@@ -105,6 +106,7 @@ namespace SlideCanvas
                         {
                             InkCanvasMain.Strokes = slidestroke[Convert.ToInt32(val[0])];
                         }
+                        tempList.Clear();
                         btnPage.Content = ppt.info;
                     }
                 }
@@ -114,7 +116,10 @@ namespace SlideCanvas
 
         private void ClearCanvas(object sender, RoutedEventArgs e)
         {
-            this.InkCanvasMain.Strokes.Clear();
+            if(this.InkCanvasMain.GetSelectedStrokes().Count != 0)
+                this.InkCanvasMain.Strokes.Remove(this.InkCanvasMain.GetSelectedStrokes());
+            else
+                this.InkCanvasMain.Strokes.Clear();
         }
         private void CustomColor(object sender, RoutedEventArgs e)
         {
@@ -367,6 +372,15 @@ namespace SlideCanvas
                 InkCanvasMain.Strokes.Remove(tempList.Pop());
             else
                 Excp("咩？", "已经到底了（＞人＜；）");
+        }
+
+        private void CanvasSeleChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void About(object sender, RoutedEventArgs e)
+        {
+            Excp("芜湖~", "Made by ZAMBAR~");
         }
     }
 }

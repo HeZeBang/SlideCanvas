@@ -22,7 +22,7 @@
     </Window.Resources>
     <Grid Background="Transparent">
         <Border Background="Transparent">
-            <InkCanvas x:Name="InkCanvasMain" Background="Transparent" GotFocus="CanvasFoc">
+            <InkCanvas x:Name="InkCanvasMain" Background="Transparent" GotFocus="CanvasFoc" SelectionChanged="CanvasSeleChanged">
             </InkCanvas>
         </Border>
         <Grid>
@@ -35,6 +35,9 @@
                 <WrapPanel x:Name="MenuPanel" ItemHeight="65" ItemWidth="65">
                     <Border CornerRadius="3" Height="55" Width="55">
                         <Button x:Name="btnExit" Height="55" Width="55" Foreground="White" Content="&#xf087;" FontSize="30" FontFamily="./Resources/#iconfont" Click="Exit"/>
+                    </Border>
+                    <Border CornerRadius="3" Height="55" Width="55">
+                        <Button x:Name="btnInfo" Height="55" Width="55" Foreground="White" Content="&#xf02a;" FontSize="30" FontFamily="./Resources/#iconfont" Click="About"/>
                     </Border>
                 </WrapPanel>
             </Border>
@@ -69,8 +72,12 @@
                 </Border.Effect>
 
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="65"/>
+                    </Grid.ColumnDefinitions>
                     <Label Content="笔刷颜色与大小" Foreground="Black" Margin="10,10,10,0" HorizontalAlignment="Left" FontSize="20" VerticalAlignment="Top" FontFamily="Microsoft YaHei UI Light"/>
-                    <Border Margin="10,0,75,10" Height="135" VerticalAlignment="Bottom" CornerRadius="5" Background="#FFFFFFFF">
+                    <Border Margin="10,0,10,10" Height="135" VerticalAlignment="Bottom" CornerRadius="5" Background="#FFFFFFFF">
                         <Border.Effect>
                             <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
                         </Border.Effect>
@@ -108,8 +115,21 @@
                             </Border>
                         </WrapPanel>
                     </Border>
-                    <Button Content="&#xf039;" FontSize="20" FontFamily="./Resources/#iconfont" Foreground="Black" Margin="99,0,80,14" VerticalAlignment="Bottom" Click="CustomColor" HorizontalAlignment="Stretch" Height="38"/>
-                    <Slider x:Name="sldSize" Orientation="Vertical" Margin="208,10,10,0" Maximum="25" SmallChange="5" TickFrequency="5" TickPlacement="BottomRight" ValueChanged="SizeSet" Value="5" LargeChange="5" HorizontalAlignment="Left" Width="41" Height="174" VerticalAlignment="Top"/>
+                    <Button Content="&#xf039;" FontSize="20" FontFamily="./Resources/#iconfont" Foreground="Black" Margin="99,0,0,14" VerticalAlignment="Bottom" Click="CustomColor" Height="38" Width="78"/>
+                    <Border Margin="5,10,10,10" Grid.Column="1" VerticalAlignment="Stretch" CornerRadius="5" Background="#FFFFFFFF">
+                        <Border.Effect>
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                        </Border.Effect>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <Ellipse HorizontalAlignment="Center" Height="{Binding Value, ElementName=sldSize}" Width="{Binding Value, ElementName=sldSize}" Margin="0,5,5,0" Stroke="Black" VerticalAlignment="Center"/>
+                            
+                            <Slider x:Name="sldSize" Grid.Row="1" Orientation="Vertical" Margin="5,5,5,5" Maximum="25" SmallChange="5" TickFrequency="5" TickPlacement="BottomRight" ValueChanged="SizeSet" Value="5" LargeChange="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        </Grid>
+                    </Border>         
                 </Grid>
             </Border>
             <Border x:Name="bdrSet" CornerRadius="5" Background="#CCFFFFFF" Grid.Column="1" Margin="0,0,10,72" HorizontalAlignment="Right" Width="259" Height="340" VerticalAlignment="Bottom">

@@ -316,6 +316,7 @@ namespace SlideCanvas
                     }catch (Exception ex2)
                     {
                         System.Diagnostics.Debug.WriteLine(ex2.Message);
+                        return false;
                     }
                 }
             return true;

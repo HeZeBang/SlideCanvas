@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -6,11 +6,18 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
+	  <verVersion>1.0.0.0</verVersion>
+	  <sauthAuthors>ZAMBAR</sauthAuthors>
     <StartupObject></StartupObject>
+    <ApplicationIcon>ahheq-eio4o-002.ico</ApplicationIcon>
+    <PackageIcon>SlideCanvas.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/HeZeBang/SlideCanvas</PackageProjectUrl>
+    <Copyright>Copyright (C) 2022 ZAMBAR</Copyright>
+    <RepositoryUrl>https://github.com/HeZeBang/SlideCanvas.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\sarasa-cascadia-tc-regular.ttf" />
     <None Remove="SlideCanvas.png" />
   </ItemGroup>
 
@@ -35,14 +42,31 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Resources\sarasa-cascadia-tc-regular.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-	  <Content Include="Resources\iconfont.ttf">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
+	  <Content Include="ahheq-eio4o-002.ico" />
+	  <Resource Include="Resources\iconfont.ttf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Resource>
+	  <None Include="..\..\Users\ZAMBAR\Pictures\SlideCanvas.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
     <Resource Include="Resources\SlideCanvas.png" />
     <Resource Include="SlideCanvas.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

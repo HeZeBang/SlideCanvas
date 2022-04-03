@@ -182,3 +182,6 @@ D:\Codes\SlideCanvas\obj\Release\net6.0-windows10.0.18362.0\refint\SlideCanvas.d
 D:\Codes\SlideCanvas\obj\Release\net6.0-windows10.0.18362.0\SlideCanvas.pdb
 D:\Codes\SlideCanvas\obj\Release\net6.0-windows10.0.18362.0\SlideCanvas.genruntimeconfig.cache
 D:\Codes\SlideCanvas\obj\Release\net6.0-windows10.0.18362.0\ref\SlideCanvas.dll
+D:\Codes\SlideCanvas\obj\Release\net6.0-windows10.0.18362.0\SlideCanvas_Content.g.cs
+D:\Codes\SlideCanvas\obj\Release\net6.0-windows10.0.18362.0\SlideCanvas.Properties.Resources.resources
+D:\Codes\SlideCanvas\obj\Release\net6.0-windows10.0.18362.0\SlideCanvas.csproj.GenerateResource.cache

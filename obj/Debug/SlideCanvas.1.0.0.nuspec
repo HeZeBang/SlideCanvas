@@ -4,7 +4,11 @@
     <id>SlideCanvas</id>
     <version>1.0.0</version>
     <authors>SlideCanvas</authors>
+    <icon>SlideCanvas.png</icon>
+    <projectUrl>https://github.com/HeZeBang/SlideCanvas</projectUrl>
     <description>Package Description</description>
+    <copyright>Copyright (C) 2022 ZAMBAR</copyright>
+    <repository type="git" url="https://github.com/HeZeBang/SlideCanvas.git" />
     <dependencies>
       <group targetFramework="net6.0-windows10.0.18362">
         <dependency id="Microsoft.AspNetCore.Owin" version="6.0.3" exclude="Build,Analyzers" />
@@ -19,9 +23,15 @@
         <frameworkReference name="Microsoft.WindowsDesktop.App" />
       </group>
     </frameworkReferences>
+    <contentFiles>
+      <files include="any/net6.0-windows10.0.18362/ahheq-eio4o-002.ico" buildAction="Content" />
+    </contentFiles>
   </metadata>
   <files>
     <file src="D:\Codes\SlideCanvas\bin\Debug\net6.0-windows10.0.18362.0\SlideCanvas.runtimeconfig.json" target="lib\net6.0-windows10.0.18362\SlideCanvas.runtimeconfig.json" />
     <file src="D:\Codes\SlideCanvas\bin\Debug\net6.0-windows10.0.18362.0\SlideCanvas.dll" target="lib\net6.0-windows10.0.18362\SlideCanvas.dll" />
+    <file src="D:\Codes\SlideCanvas\ahheq-eio4o-002.ico" target="content\ahheq-eio4o-002.ico" />
+    <file src="D:\Codes\SlideCanvas\ahheq-eio4o-002.ico" target="contentFiles\any\net6.0-windows10.0.18362\ahheq-eio4o-002.ico" />
+    <file src="D:\Users\ZAMBAR\Pictures\SlideCanvas.png" target="\SlideCanvas.png" />
   </files>
 </package>

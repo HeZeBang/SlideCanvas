@@ -8,7 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/sarasa-cascadia-tc-regular.ttf")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/iconfont.ttf")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("ahheq-eio4o-002.ico")]
 
 
