@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Ink;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -70,7 +71,7 @@ namespace SlideCanvas
                 slidestroke.Clear();
                 tempList.Clear();
                 if (ppt.presentation != null)
-                { 
+                {
                     timer.Start();
                 }
             }
@@ -116,7 +117,7 @@ namespace SlideCanvas
 
         private void ClearCanvas(object sender, RoutedEventArgs e)
         {
-            if(this.InkCanvasMain.GetSelectedStrokes().Count != 0)
+            if (this.InkCanvasMain.GetSelectedStrokes().Count != 0)
                 this.InkCanvasMain.Strokes.Remove(this.InkCanvasMain.GetSelectedStrokes());
             else
                 this.InkCanvasMain.Strokes.Clear();
@@ -129,9 +130,7 @@ namespace SlideCanvas
             {
                 var drawingAttributes = this.InkCanvasMain.DefaultDrawingAttributes;
                 drawingAttributes.Color = Color.FromArgb(pck.Color.A, pck.Color.R, pck.Color.G, pck.Color.B);
-                brdCus.Background = new SolidColorBrush(drawingAttributes.Color);
                 radCus.IsChecked = true;
-                drawingAttributes.FitToCurve = true;
                 InkCanvasMain.DefaultDrawingAttributes = drawingAttributes;
             }
         }
@@ -147,32 +146,36 @@ namespace SlideCanvas
         }
 
 
-        private void ToogleBtn(object sender, RoutedEventArgs e)
+        private void ToggleBtn(object sender, RoutedEventArgs e)
         {
-            ToogleVisibility(bdrPenSet, Visibility.Collapsed);
-            ToogleVisibility(bdrSet, Visibility.Collapsed);
+            ToggleVisibility(bdrPenSet, Visibility.Collapsed);
+            ToggleVisibility(bdrSet, Visibility.Collapsed);
             this.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#01FFFFFF"));
             foreach (Border item in ToolPanel.Children)
                 item.Background = null;
             switch ((sender as Button).Name)
             {
-                case "btnSlc":
+                case "btnArr":
+                    if (this.InkCanvasMain.ActiveEditingMode == InkCanvasEditingMode.Select)
+                    {
+                        ToggleVisibility(bdrArrSet, Visibility.Visible);
+                    }
                     this.InkCanvasMain.EditingMode = InkCanvasEditingMode.Select;
                     break;
                 case "btnPen":
                     if (this.InkCanvasMain.ActiveEditingMode == InkCanvasEditingMode.Ink)
                     {
                         bdrPenSet.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#CCFFFFFF"));
-                        ToogleVisibility(bdrPenSet, Visibility.Visible);
+                        ToggleVisibility(bdrPenSet, Visibility.Visible);
                     }
                     this.InkCanvasMain.EditingMode = InkCanvasEditingMode.Ink;
                     break;
                 case "btnEra":
+                    if (this.InkCanvasMain.ActiveEditingMode == InkCanvasEditingMode.EraseByPoint)
+                    {
+                        ToggleVisibility(bdrClr, Visibility.Visible);
+                    }
                     this.InkCanvasMain.EditingMode = InkCanvasEditingMode.EraseByPoint;
-                    break;
-                case "btnArr":
-                    this.Background = Brushes.Transparent;
-                    this.InkCanvasMain.EditingMode = InkCanvasEditingMode.Select;
                     break;
                 default:
                     break;
@@ -195,14 +198,17 @@ namespace SlideCanvas
         }
         private void ClsPanel(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            ToogleVisibility((sender as Border), Visibility.Collapsed);
+            ToggleVisibility((sender as Border), Visibility.Collapsed);
         }
 
         private void CanvasFoc(object sender, RoutedEventArgs e)
         {
-            ToogleVisibility(bdrPenSet, Visibility.Collapsed);
+            ToggleVisibility(bdrPenSet, Visibility.Collapsed);
+            ToggleVisibility(bdrSet, Visibility.Collapsed);
+            ToggleVisibility(bdrArrSet, Visibility.Collapsed);
+            ToggleVisibility(bdrClr, Visibility.Collapsed);
         }
-        private void ToogleVisibility(Border character, Visibility visibility)
+        private void ToggleVisibility(Border character, Visibility visibility)
         {
             Storyboard storyboard = new();
             if (visibility == Visibility.Visible)
@@ -216,7 +222,7 @@ namespace SlideCanvas
             storyboard.Completed += (o, a) => { character.Visibility = visibility; };
             storyboard.Begin(character);
         }
-        private void ToogleVisibility(Border character)
+        private void ToggleVisibility(Border character)
         {
             Storyboard storyboard = new(), storyboard1 = new();
             character.Visibility = Visibility.Visible;
@@ -259,7 +265,7 @@ namespace SlideCanvas
             {
                 if (!ppt.Zoom(20))
                     Excp("Error", "打开缩略图失败");
-                ToogleBtn(btnArr, e);
+                ToggleBtn(btnArr, e);
             }
         }
 
@@ -294,7 +300,7 @@ namespace SlideCanvas
             Border bdr = bdrInfo;
             ((bdr.Child as StackPanel).Children[0] as Label).Content = title;
             (((bdr.Child as StackPanel).Children[1] as Border).Child as Label).Content = content;
-            ToogleVisibility(bdr);
+            ToggleVisibility(bdr);
 
         }
 
@@ -306,9 +312,9 @@ namespace SlideCanvas
         private void SetShow(object sender, RoutedEventArgs e)
         {
             if (bdrSet.Visibility == Visibility.Visible)
-                ToogleVisibility(bdrSet, Visibility.Collapsed);
+                ToggleVisibility(bdrSet, Visibility.Collapsed);
             else
-                ToogleVisibility(bdrSet, Visibility.Visible);
+                ToggleVisibility(bdrSet, Visibility.Visible);
         }
 
 
@@ -381,6 +387,28 @@ namespace SlideCanvas
         private void About(object sender, RoutedEventArgs e)
         {
             Excp("芜湖~", "Made by ZAMBAR~");
+        }
+
+        private void ArrowTog(object sender, RoutedEventArgs e)
+        {
+            switch ((sender as RadioButton).Name)
+            { 
+                case "RadSlc":
+                break;
+            case "RadArr":
+                this.Background = Brushes.Transparent;
+                break;
+            default:
+                break;
+            }
+        }
+
+        private void ClearDrag(object sender, RoutedEventArgs e)
+        {
+            if(sld2Clr.Value >= 50)
+                ClearCanvas(sender, e);
+            ToggleVisibility(bdrClr, Visibility.Collapsed);
+            sld2Clr.Value = 0;
         }
     }
 }

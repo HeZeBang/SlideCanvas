@@ -8,6 +8,7 @@ using System.IO;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using Zack.ComObjectHelpers;
@@ -311,7 +312,11 @@ namespace SlideCanvas
                     System.Diagnostics.Debug.WriteLine(ex.Message);
                     try
                     {
-                        presentation.SlideShowWindow.Activate();
+                        Task task = Task.Run(() =>
+                        {
+                            presentation.SlideShowWindow.Activate();
+                            SendKeys.SendWait("G");
+                        });
                         SendKeys.SendWait("G");
                     }catch (Exception ex2)
                     {

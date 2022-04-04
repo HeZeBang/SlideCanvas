@@ -31,7 +31,10 @@
                 <ColumnDefinition Width="600"></ColumnDefinition>
                 <ColumnDefinition Width="350"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Border CornerRadius="3" Background="#3cFFFFFF" Height="65" Grid.Column="0" VerticalAlignment="Bottom" Margin="0,0,0,5" HorizontalAlignment="Left">
+            <Border CornerRadius="3" Background="#CCFFFFFF" Height="65" Grid.Column="0" VerticalAlignment="Bottom" Margin="10,0,0,5" HorizontalAlignment="Left">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                </Border.Effect>
                 <WrapPanel x:Name="MenuPanel" ItemHeight="65" ItemWidth="65">
                     <Border CornerRadius="3" Height="55" Width="55">
                         <Button x:Name="btnExit" Height="55" Width="55" Foreground="White" Content="&#xf087;" FontSize="30" FontFamily="./Resources/#iconfont" Click="Exit"/>
@@ -41,19 +44,22 @@
                     </Border>
                 </WrapPanel>
             </Border>
-            <Border CornerRadius="3" Background="#3cFFFFFF" Height="65" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,73,5">
+            <Border CornerRadius="3" Background="#CCFFFFFF" Height="65" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,5" HorizontalAlignment="Left">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                </Border.Effect>
                 <WrapPanel x:Name="ToolPanel" ItemHeight="65" ItemWidth="75">
                     <Border CornerRadius="3" Height="55" Width="65">
-                        <Button x:Name="btnArr" Content="&#xf05a;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ToogleBtn"/>
+                        <Button x:Name="btnArr" Content="&#xf05a;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ToggleBtn"/>
                     </Border>
-                    <Border CornerRadius="3" Height="55" Width="65">
-                        <Button x:Name="btnSlc" Content="&#xf039;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ToogleBtn"/>
-                    </Border>
+                    <!--Border CornerRadius="3" Height="55" Width="65">
+                        <Button x:Name="btnSlc" Content="&#xf039;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ToggleBtn"/>
+                    </Border-->
                     <Border CornerRadius="3" Height="55" Width="65" Background="#FF4DFF4D">
-                        <Button x:Name="btnPen" Content="&#xf06c;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ToogleBtn"/>
+                        <Button x:Name="btnPen" Content="&#xf06c;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ToggleBtn"/>
                     </Border>
                     <Border CornerRadius="3" Height="55" Width="65">
-                        <Button x:Name="btnEra" Content="&#xefb1;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ToogleBtn"/>
+                        <Button x:Name="btnEra" Content="&#xefb1;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ToggleBtn"/>
                     </Border>
                     <Border CornerRadius="3" Height="55" Width="65">
                         <Button x:Name="btnClr" Content="&#xef2f;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ClearCanvas"/>
@@ -62,22 +68,21 @@
                         <Button x:Name="btnUnd" Content="&#xe63c;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" HorizontalAlignment="Center" Click="Undo"/>
                     </Border>
                     <Border CornerRadius="3" Height="55" Width="65">
-                        <Button x:Name="btnSet" Content="&#xefff;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="SetShow" HorizontalAlignment="Center"/>
+                        <Button x:Name="btnSet" Content="&#xef7d;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="SetShow" HorizontalAlignment="Center"/>
                     </Border>
                 </WrapPanel>
             </Border>
-            <Border x:Name="bdrPenSet" CornerRadius="5" Background="#CCFFFFFF" Grid.Column="1" Margin="0,0,300,72" HorizontalAlignment="Right" Width="259" Height="187" VerticalAlignment="Bottom" LostMouseCapture="ClsPanel">
+            <Border x:Name="bdrPenSet" CornerRadius="5" Background="#CCFFFFFF" Grid.Column="1" Height="187" Margin="40,80,300,80" VerticalAlignment="Bottom" LostMouseCapture="ClsPanel">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
                 </Border.Effect>
-
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="65"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="笔刷颜色与大小" Foreground="Black" Margin="10,10,10,0" HorizontalAlignment="Left" FontSize="20" VerticalAlignment="Top" FontFamily="Microsoft YaHei UI Light"/>
-                    <Border Margin="10,0,10,10" Height="135" VerticalAlignment="Bottom" CornerRadius="5" Background="#FFFFFFFF">
+                    <Border Margin="10,42,10,10" CornerRadius="5" Background="#FFFFFFFF">
                         <Border.Effect>
                             <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
                         </Border.Effect>
@@ -110,12 +115,24 @@
                             <Border CornerRadius="5" Height="40" Width="40" Background="White" BorderBrush="#CCCCCCCC" BorderThickness="1,1,1,1">
                                 <RadioButton GroupName="Color" Checked="ColorPick" />
                             </Border>
-                            <Border x:Name="brdCus" CornerRadius="5" Height="40" Width="40" Background="White" BorderBrush="#CCCCCCCC" BorderThickness="1,1,1,1">
-                                <RadioButton x:Name="radCus" GroupName="Color" Checked="ColorPick" />
+                            <Border x:Name="brdCus" CornerRadius="5" Height="40" Width="40" BorderBrush="#CCCCCCCC" BorderThickness="1,1,1,1">
+                                <Border.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="OrangeRed"/>
+                                        <GradientStop Color="Orange" Offset="0.142"/>
+                                        <GradientStop Color="Yellow" Offset="0.285"/>
+                                        <GradientStop Color="LimeGreen" Offset="0.428"/>
+                                        <GradientStop Color="DarkCyan" Offset="0.574"/>
+                                        <GradientStop Color="CornflowerBlue" Offset="0.714"/>
+                                        <GradientStop Color="MediumPurple" Offset="0.857"/>
+                                        <GradientStop Color="OrangeRed" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <RadioButton x:Name="radCus" GroupName="Color" Checked="CustomColor"/>
                             </Border>
+                            <!--Button Content="&#xf039;" Height="40" Width="40" FontSize="20" FontFamily="./Resources/#iconfont" Foreground="Black" Click="CustomColor" /-->
                         </WrapPanel>
                     </Border>
-                    <Button Content="&#xf039;" FontSize="20" FontFamily="./Resources/#iconfont" Foreground="Black" Margin="99,0,0,14" VerticalAlignment="Bottom" Click="CustomColor" Height="38" Width="78"/>
                     <Border Margin="5,10,10,10" Grid.Column="1" VerticalAlignment="Stretch" CornerRadius="5" Background="#FFFFFFFF">
                         <Border.Effect>
                             <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
@@ -126,13 +143,30 @@
                                 <RowDefinition Height="1*"/>
                             </Grid.RowDefinitions>
                             <Ellipse HorizontalAlignment="Center" Height="{Binding Value, ElementName=sldSize}" Width="{Binding Value, ElementName=sldSize}" Margin="0,5,5,0" Stroke="Black" VerticalAlignment="Center"/>
-                            
+
                             <Slider x:Name="sldSize" Grid.Row="1" Orientation="Vertical" Margin="5,5,5,5" Maximum="25" SmallChange="5" TickFrequency="5" TickPlacement="BottomRight" ValueChanged="SizeSet" Value="5" LargeChange="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         </Grid>
-                    </Border>         
+                    </Border>
                 </Grid>
             </Border>
-            <Border x:Name="bdrSet" CornerRadius="5" Background="#CCFFFFFF" Grid.Column="1" Margin="0,0,10,72" HorizontalAlignment="Right" Width="259" Height="340" VerticalAlignment="Bottom">
+            <Border x:Name="bdrArrSet" CornerRadius="5" Background="#CCFFFFFF" Grid.Column="1" Width="75" Height="125" Margin="0,0,0,80" HorizontalAlignment="Left" VerticalAlignment="Bottom" LostMouseCapture="ClsPanel">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                </Border.Effect>
+                <Grid>
+                    <Label Content="指针" Foreground="Black" Margin="10,10,10,0" HorizontalAlignment="Left" FontSize="20" VerticalAlignment="Top" FontFamily="Microsoft YaHei UI Light"/>
+                    <Border CornerRadius="5" Background="#FFFFFFFF" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,40,5,5" BorderBrush="#FFCCCCCC" BorderThickness="1,1,1,1">
+                        <Border.Effect>
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                        </Border.Effect>
+                        <StackPanel>
+                            <RadioButton x:Name="RadSlc" GroupName="Arrow" Margin="3,5,0,0" Foreground="Black" Checked="ArrowTog" >选择</RadioButton>
+                            <RadioButton x:Name="RadArr" GroupName="Arrow" Margin="3,5,0,0" Foreground="Black" Checked="ArrowTog" >鼠标</RadioButton>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+            <Border x:Name="bdrSet" CornerRadius="5" Background="#CCFFFFFF" Grid.Column="1" Width="260" Height="340" Margin="0,80,40,80" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
                 </Border.Effect>
@@ -164,7 +198,20 @@
                     </Border>
                 </Grid>
             </Border>
-
+            <Border x:Name="bdrClr" CornerRadius="5" Background="#CCFFFFFF" Grid.Column="1" Width="150" Height="85" Margin="110,0,0,80" HorizontalAlignment="Left" VerticalAlignment="Bottom" LostMouseCapture="ClsPanel">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                </Border.Effect>
+                <Grid>
+                    <Label Content="滑动以清空" Foreground="Black" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" FontFamily="Microsoft YaHei UI Light"></Label>
+                    <Border CornerRadius="5" Background="#FFFFFFFF" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,40,5,5" BorderBrush="#FFCCCCCC" BorderThickness="1,1,1,1">
+                        <Border.Effect>
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                        </Border.Effect>
+                        <Slider x:Name="sld2Clr" Grid.Row="1" Orientation="Horizontal" Margin="5,5,5,5" Maximum="100" SmallChange="10" TickFrequency="10" TickPlacement="None" LargeChange="50" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" UseLayoutRounding="True" Minimum="0" Thumb.DragCompleted="ClearDrag" />
+                    </Border>
+                </Grid>
+            </Border>
             <Border x:Name="bdrInfo" CornerRadius="5" Background="#CCFFFFFF" Grid.Column="2" Margin="0,0,10,72" HorizontalAlignment="Right" Width="259" Height="Auto" VerticalAlignment="Bottom" Visibility="Collapsed">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
@@ -179,14 +226,17 @@
                     </Border>
                 </StackPanel>
             </Border>
-            <Grid Height="65" Grid.Column="2" VerticalAlignment="Bottom" Margin="0,0,5,5" HorizontalAlignment="Right">
-                <Border CornerRadius="3" Background="#3cFFFFFF" Width="200" HorizontalAlignment="Right">
+            <Grid Height="65" Grid.Column="2" VerticalAlignment="Bottom" Margin="0,0,10,5" HorizontalAlignment="Right">
+                <Border CornerRadius="3" Background="#CCFFFFFF" Width="200" HorizontalAlignment="Right">
+                    <Border.Effect>
+                        <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                    </Border.Effect>
                     <WrapPanel x:Name="SlidePanel" ItemHeight="65" ItemWidth="60" Orientation="Horizontal" HorizontalAlignment="Center">
                         <Border CornerRadius="3" Height="55" Width="55">
                             <Button x:Name="btnPrev" Content="&#xef19;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="55" Click="PageChange" FontWeight="Normal"/>
                         </Border>
                         <Border  CornerRadius="3" Height="55" Width="55" Background="OrangeRed">
-                            <Button x:Name="btnPage" Content="&#xefc8;&#x0a;导入" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="55" Click="PageClick" FontStyle="Normal" FontWeight="Regular" FontStretch="Medium"/>
+                            <Button x:Name="btnPage" Content="&#xefc8;&#x0a;导入" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="55" Click="PageClick" FontStyle="Normal" FontWeight="Normal" FontStretch="Medium"/>
                         </Border>
                         <Border  CornerRadius="3" Height="55" Width="55" >
                             <Button x:Name="btnNext" Content="&#xef1f;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="55" Click="PageChange"/>
