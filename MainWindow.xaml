@@ -6,8 +6,9 @@
         xmlns:local="clr-namespace:SlideCanvas"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         mc:Ignorable="d"
+        ui:ThemeManager.IsThemeAware="True"
         Title="SlideCanvas" Height="768" Width="1366" 
-        Background="#01FFFFFF" WindowStyle="None" AllowsTransparency="True" Opacity="1.0" WindowState="Maximized" Deactivated="Window_Deactivated" Closing="CloseWindow" Icon="/SlideCanvas.png">
+        Background="#01FFFFFF" WindowStyle="None" AllowsTransparency="True" Opacity="1.0" WindowState="Maximized" Deactivated="Window_Deactivated" Closing="CloseWindow" Icon="/SlideCanvas.png" KeyDown="CanvasKeyDown">
 
     <Window.Resources>
         <Storyboard x:Key="FadeIn">
@@ -20,9 +21,9 @@
             <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.8" To="0.0" />
         </Storyboard>
     </Window.Resources>
-    <Grid Background="Transparent">
+    <Grid x:Name="grdMain" Background="Transparent">
         <Border Background="Transparent">
-            <InkCanvas x:Name="InkCanvasMain" Background="Transparent" GotFocus="CanvasFoc" SelectionChanged="CanvasSeleChanged">
+            <InkCanvas x:Name="InkCanvasMain" Background="Transparent" GotFocus="CanvasFoc" SelectionChanged="CanvasSeleChanged" TouchDown="CanvasTouchDown" PreviewTouchUp="CanvasPTouchUp">
             </InkCanvas>
         </Border>
         <Grid>
@@ -31,9 +32,9 @@
                 <ColumnDefinition Width="600"></ColumnDefinition>
                 <ColumnDefinition Width="350"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Border CornerRadius="3" Background="#CCFFFFFF" Height="65" Grid.Column="0" VerticalAlignment="Bottom" Margin="10,0,0,5" HorizontalAlignment="Left">
+            <Border CornerRadius="3" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" Height="65" Grid.Column="0" VerticalAlignment="Bottom" Margin="10,0,0,5" HorizontalAlignment="Left">
                 <Border.Effect>
-                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                 </Border.Effect>
                 <WrapPanel x:Name="MenuPanel" ItemHeight="65" ItemWidth="65">
                     <Border CornerRadius="3" Height="55" Width="55">
@@ -44,9 +45,9 @@
                     </Border>
                 </WrapPanel>
             </Border>
-            <Border CornerRadius="3" Background="#CCFFFFFF" Height="65" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,5" HorizontalAlignment="Left">
+            <Border CornerRadius="3" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" Height="65" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,5" HorizontalAlignment="Left">
                 <Border.Effect>
-                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                 </Border.Effect>
                 <WrapPanel x:Name="ToolPanel" ItemHeight="65" ItemWidth="75">
                     <Border CornerRadius="3" Height="55" Width="65">
@@ -72,19 +73,19 @@
                     </Border>
                 </WrapPanel>
             </Border>
-            <Border x:Name="bdrPenSet" CornerRadius="5" Background="#CCFFFFFF" Grid.Column="1" Height="187" Margin="40,80,300,80" VerticalAlignment="Bottom" LostMouseCapture="ClsPanel">
+            <Border x:Name="bdrPenSet" CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" Grid.Column="1" Height="187" Margin="40,80,300,80" VerticalAlignment="Bottom" LostMouseCapture="ClsPanel">
                 <Border.Effect>
-                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                 </Border.Effect>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="65"/>
                     </Grid.ColumnDefinitions>
-                    <Label Content="笔刷颜色与大小" Foreground="Black" Margin="10,10,10,0" HorizontalAlignment="Left" FontSize="20" VerticalAlignment="Top" FontFamily="Microsoft YaHei UI Light"/>
-                    <Border Margin="10,42,10,10" CornerRadius="5" Background="#FFFFFFFF">
+                    <Label Content="笔刷颜色与大小" Margin="10,10,10,0" HorizontalAlignment="Left" FontSize="20" VerticalAlignment="Top" FontFamily="Microsoft YaHei UI Light"/>
+                    <Border Margin="10,42,10,10" CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltHighRevealBackgroundBrush}">
                         <Border.Effect>
-                            <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                         </Border.Effect>
 
                         <WrapPanel  ItemHeight="45" ItemWidth="43">
@@ -130,106 +131,120 @@
                                 </Border.Background>
                                 <RadioButton x:Name="radCus" GroupName="Color" Checked="CustomColor"/>
                             </Border>
-                            <!--Button Content="&#xf039;" Height="40" Width="40" FontSize="20" FontFamily="./Resources/#iconfont" Foreground="Black" Click="CustomColor" /-->
+                            <!--Button Content="&#xf039;" Height="40" Width="40" FontSize="20" FontFamily="./Resources/#iconfont" Click="CustomColor" /-->
                         </WrapPanel>
                     </Border>
-                    <Border Margin="5,10,10,10" Grid.Column="1" VerticalAlignment="Stretch" CornerRadius="5" Background="#FFFFFFFF">
+                    <Border Margin="5,10,10,10" Grid.Column="1" VerticalAlignment="Stretch" CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltHighRevealBackgroundBrush}">
                         <Border.Effect>
-                            <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                         </Border.Effect>
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="30"/>
                                 <RowDefinition Height="1*"/>
                             </Grid.RowDefinitions>
-                            <Ellipse HorizontalAlignment="Center" Height="{Binding Value, ElementName=sldSize}" Width="{Binding Value, ElementName=sldSize}" Margin="0,5,5,0" Stroke="Black" VerticalAlignment="Center"/>
+                            <Ellipse HorizontalAlignment="Center" Height="{Binding Value, ElementName=sldSize}" Width="{Binding Value, ElementName=sldSize}" Margin="0,5,5,0" Stroke="{DynamicResource AcrylicBackgroundFillColorDefaultInverseBrush}" VerticalAlignment="Center"/>
 
                             <Slider x:Name="sldSize" Grid.Row="1" Orientation="Vertical" Margin="5,5,5,5" Maximum="25" SmallChange="5" TickFrequency="5" TickPlacement="BottomRight" ValueChanged="SizeSet" Value="5" LargeChange="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         </Grid>
                     </Border>
                 </Grid>
             </Border>
-            <Border x:Name="bdrArrSet" CornerRadius="5" Background="#CCFFFFFF" Grid.Column="1" Width="75" Height="125" Margin="0,0,0,80" HorizontalAlignment="Left" VerticalAlignment="Bottom" LostMouseCapture="ClsPanel">
+            <Border x:Name="bdrArrSet" CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" Grid.Column="1" Width="75" Height="125" Margin="0,0,0,80" HorizontalAlignment="Left" VerticalAlignment="Bottom" LostMouseCapture="ClsPanel">
                 <Border.Effect>
-                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                 </Border.Effect>
                 <Grid>
-                    <Label Content="指针" Foreground="Black" Margin="10,10,10,0" HorizontalAlignment="Left" FontSize="20" VerticalAlignment="Top" FontFamily="Microsoft YaHei UI Light"/>
-                    <Border CornerRadius="5" Background="#FFFFFFFF" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,40,5,5" BorderBrush="#FFCCCCCC" BorderThickness="1,1,1,1">
+                    <Label Content="指针" Margin="10,10,10,0" HorizontalAlignment="Left" FontSize="20" VerticalAlignment="Top" FontFamily="Microsoft YaHei UI Light"/>
+                    <Border CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltHighRevealBackgroundBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,40,5,5" BorderBrush="#FFCCCCCC" BorderThickness="1,1,1,1">
                         <Border.Effect>
-                            <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                         </Border.Effect>
                         <StackPanel>
-                            <RadioButton x:Name="RadSlc" GroupName="Arrow" Margin="3,5,0,0" Foreground="Black" Checked="ArrowTog" >选择</RadioButton>
-                            <RadioButton x:Name="RadArr" GroupName="Arrow" Margin="3,5,0,0" Foreground="Black" Checked="ArrowTog" >鼠标</RadioButton>
+                            <RadioButton x:Name="RadSlc" GroupName="Arrow" Margin="3,5,0,0" Checked="ArrowTog" IsChecked="True" >选择</RadioButton>
+                            <RadioButton x:Name="RadArr" GroupName="Arrow" Margin="3,5,0,0" Checked="ArrowTog" >鼠标</RadioButton>
                         </StackPanel>
                     </Border>
                 </Grid>
             </Border>
-            <Border x:Name="bdrSet" CornerRadius="5" Background="#CCFFFFFF" Grid.Column="1" Width="260" Height="340" Margin="0,80,40,80" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+            <Border x:Name="bdrSet" CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" Grid.Column="1" Width="260" Height="340" Margin="0,80,40,80" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                 <Border.Effect>
-                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                 </Border.Effect>
                 <Grid>
-                    <Label Content="设置" Foreground="Black" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" FontFamily="Microsoft YaHei UI Light"></Label>
-                    <Border CornerRadius="5" Background="#FFFFFFFF" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,40,5,5" BorderBrush="#FFCCCCCC" BorderThickness="1,1,1,1">
+                    <Label Content="设置" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" FontFamily="Microsoft YaHei UI Light"></Label>
+                    <Border CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltHighRevealBackgroundBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,40,5,5" BorderBrush="{DynamicResource GridViewItemRevealBorderBrush}" BorderThickness="1,1,1,1">
                         <Border.Effect>
-                            <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                         </Border.Effect>
                         <ui:ScrollViewerEx>
                             <StackPanel Margin="5,5,5,5">
-                                <Label FontSize="20" Foreground="Black" FontFamily="./Resources/#Sarasa Cascadia TC" Visibility="Collapsed">This is an embedded font</Label>
-                                <Label Content="远程控制" Foreground="Black"  FontSize="17" FontFamily="Microsoft YaHei"/>
-                                <Label Margin="5,5,5,5" Foreground="Black"  Content="1. 使你的设备连接WLAN" FontFamily="Microsoft YaHei Light"/>
-                                <Label Margin="10,0,10,5" Foreground="Black"  Content="启动热点" FontFamily="Microsoft YaHei Light"/>
-                                <ui:ToggleSwitch Name="swcSpot"  Foreground="Black"  Margin="10,0,0,10" Toggled="ToggleWLAN"></ui:ToggleSwitch>
+                                <Label FontSize="20" FontFamily="./Resources/#Sarasa Cascadia TC" Visibility="Collapsed">This is an embedded font</Label>
+                                <Label Content="高级设置" Margin="0,5,0,5"  FontSize="17" FontFamily="Microsoft YaHei"/>
+                                <Label Margin="5,5,5,0"  Content="对齐" FontFamily="Microsoft YaHei Light"/>
+                                <ComboBox Margin="5,0,5,5" SelectedIndex="1" SelectionChanged="ChangedAlign">
+                                    <ComboBoxItem>顶部</ComboBoxItem>
+                                    <ComboBoxItem>底部</ComboBoxItem>
+                                </ComboBox>
+                                <Label Margin="5,5,5,0"  Content="暗黑模式" FontFamily="Microsoft YaHei Light"/>
+                                <ui:ToggleSwitch x:Name="togDarkMode" Margin="5,0,5,5" IsOn="False" Toggled="DarkMode"/>
+                                <Label Margin="5,5,5,0"  Content="橡皮阈值" FontFamily="Microsoft YaHei Light"/>
+                                <Slider x:Name="sliEra" Maximum="100" Minimum="10" Value="20" Margin="5,0,5,5" SmallChange="1" TickFrequency="10" TickPlacement="BottomRight"/>
+                                <Label Margin="5,5,5,0"  Content="平滑笔刷" FontFamily="Microsoft YaHei Light"/>
+                                <ui:ToggleSwitch Margin="5,0,5,5" IsOn="{Binding DefaultDrawingAttributes.FitToCurve, ElementName=InkCanvasMain}"/>
+                                <Label Margin="5,5,5,0"  Content="禁用压感" FontFamily="Microsoft YaHei Light"/>
+                                <ui:ToggleSwitch Margin="5,0,5,5" IsOn="{Binding DefaultDrawingAttributes.IgnorePressure, ElementName=InkCanvasMain}"/>
+                                <Label Content="远程控制"  FontSize="17" FontFamily="Microsoft YaHei"/>
+                                <Label Margin="5,5,5,5"  Content="1. 使你的设备连接WLAN" FontFamily="Microsoft YaHei Light"/>
+                                <Label Margin="10,0,10,5"  Content="启动热点" FontFamily="Microsoft YaHei Light"/>
+                                <ui:ToggleSwitch Name="swcSpot"   Margin="10,0,0,10" Toggled="ToggleWLAN"></ui:ToggleSwitch>
                                 <Grid Name="grdSpot" HorizontalAlignment="Center" Visibility="Collapsed">
                                     <Image Name="bmpSpot" Height="125" Width="125" VerticalAlignment="Top"/>
-                                    <Label Name="lblSpot"  Foreground="Black"  Margin="0,125,0,0" Content="SSID/PWD" FontFamily="Microsoft YaHei Light" />
+                                    <Label Name="lblSpot"   Margin="0,125,0,0" Content="SSID/PWD" FontFamily="Microsoft YaHei Light" />
                                 </Grid>
-                                <Label Margin="5,5,5,5" Content="2. 扫描二维码" Foreground="Black" FontFamily="Microsoft YaHei Light"/>
+                                <Label Margin="5,5,5,5" Content="2. 扫描二维码" FontFamily="Microsoft YaHei Light"/>
 
                                 <Grid HorizontalAlignment="Center">
                                     <Image Name="bmpIP" Height="125" Width="125" VerticalAlignment="Top"/>
-                                    <Label Margin="0,125,0,0"  Foreground="Black"  Name="lblIP" Content="IP/PORT" FontFamily="Microsoft YaHei Light" />
+                                    <Label Margin="0,125,0,0"   Name="lblIP" Content="IP/PORT" FontFamily="Microsoft YaHei Light" />
                                 </Grid>
                             </StackPanel>
                         </ui:ScrollViewerEx>
                     </Border>
                 </Grid>
             </Border>
-            <Border x:Name="bdrClr" CornerRadius="5" Background="#CCFFFFFF" Grid.Column="1" Width="150" Height="85" Margin="110,0,0,80" HorizontalAlignment="Left" VerticalAlignment="Bottom" LostMouseCapture="ClsPanel">
+            <Border x:Name="bdrClr" CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" Grid.Column="1" Width="150" Height="85" Margin="110,0,0,80" HorizontalAlignment="Left" VerticalAlignment="Bottom" LostMouseCapture="ClsPanel">
                 <Border.Effect>
-                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                 </Border.Effect>
                 <Grid>
-                    <Label Content="滑动以清空" Foreground="Black" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" FontFamily="Microsoft YaHei UI Light"></Label>
-                    <Border CornerRadius="5" Background="#FFFFFFFF" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,40,5,5" BorderBrush="#FFCCCCCC" BorderThickness="1,1,1,1">
+                    <Label Content="滑动以清空" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" FontFamily="Microsoft YaHei UI Light"></Label>
+                    <Border CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltHighRevealBackgroundBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,40,5,5" BorderBrush="{DynamicResource GridViewItemRevealBorderBrush}" BorderThickness="1,1,1,1">
                         <Border.Effect>
-                            <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                         </Border.Effect>
                         <Slider x:Name="sld2Clr" Grid.Row="1" Orientation="Horizontal" Margin="5,5,5,5" Maximum="100" SmallChange="10" TickFrequency="10" TickPlacement="None" LargeChange="50" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" UseLayoutRounding="True" Minimum="0" Thumb.DragCompleted="ClearDrag" />
                     </Border>
                 </Grid>
             </Border>
-            <Border x:Name="bdrInfo" CornerRadius="5" Background="#CCFFFFFF" Grid.Column="2" Margin="0,0,10,72" HorizontalAlignment="Right" Width="259" Height="Auto" VerticalAlignment="Bottom" Visibility="Collapsed">
+            <Border x:Name="bdrInfo" CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" Grid.Column="2" Margin="0,0,10,72" HorizontalAlignment="Right" Width="259" Height="Auto" VerticalAlignment="Bottom" Visibility="Visible">
                 <Border.Effect>
-                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                 </Border.Effect>
                 <StackPanel>
-                    <Label x:Name="infTitle" Content="Title" Margin="5,5,5,0" FontSize="20" Foreground="Gray" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
-                    <Border CornerRadius="5" Background="white" Margin="5,0,5,5">
+                    <Label x:Name="infTitle" Content="Title" Margin="5,5,5,0" FontSize="20"  HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+                    <Border CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltHighRevealBackgroundBrush}" Margin="5,0,5,5">
                         <Border.Effect>
-                            <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                         </Border.Effect>
-                        <Label x:Name="infContent" Content="Content" Margin="5,5,5,5" Foreground="Black" Background="White"/>
+                        <Label x:Name="infContent" Content="Content" Margin="5,5,5,5"/>
                     </Border>
                 </StackPanel>
             </Border>
             <Grid Height="65" Grid.Column="2" VerticalAlignment="Bottom" Margin="0,0,10,5" HorizontalAlignment="Right">
-                <Border CornerRadius="3" Background="#CCFFFFFF" Width="200" HorizontalAlignment="Right">
+                <Border CornerRadius="3" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" Width="200" HorizontalAlignment="Right">
                     <Border.Effect>
-                        <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.3" RenderingBias="Performance"/>
+                        <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                     </Border.Effect>
                     <WrapPanel x:Name="SlidePanel" ItemHeight="65" ItemWidth="60" Orientation="Horizontal" HorizontalAlignment="Center">
                         <Border CornerRadius="3" Height="55" Width="55">

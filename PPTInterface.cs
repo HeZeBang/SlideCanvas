@@ -29,6 +29,8 @@ namespace SlideCanvas
 
         internal string ip = "", page = "", info = "";
 
+        internal int curpg = 0, totpg = 0;
+
         internal BitmapImage bim;
 
         private COMReferenceTracker comReference = new COMReferenceTracker();
@@ -272,6 +274,8 @@ namespace SlideCanvas
                 dynamic cur = T(T(T(presentation.SlideShowWindow).View).Slide).SlideIndex;
                 dynamic tot = T(presentation.Slides).Count;
                 info = string.Format("{0}/{1}", cur, tot);
+                curpg = cur;
+                totpg = tot;
             }
             catch (Exception ex)
             {
