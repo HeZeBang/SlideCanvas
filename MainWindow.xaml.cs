@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -65,6 +66,10 @@ namespace SlideCanvas
         private async void InitAsync()
         {
             ppt = new();
+
+            this.RadArr.IsChecked = true;
+            ToggleArrow(RadArr, new RoutedEventArgs());
+
             BitmapImage bitmapImage = new BitmapImage();
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(ppt.ip, QRCodeGenerator.ECCLevel.Q);
@@ -83,26 +88,31 @@ namespace SlideCanvas
             bmpIP.Source = bitmapImage;
             lblIP.Content = ppt.ip;
             Topmost = true;
-            await Task.Run(() =>
+            string[] pargs = Environment.GetCommandLineArgs();
+            if (pargs.Length > 1)
             {
-                string[] pargs = Environment.GetCommandLineArgs();
-
-                if (pargs.Length > 1)
+                ToggleVisibility(bdrLoad, Visibility.Visible);
+                await Task.Run(() =>
                 {
+
                     Task task = new(() =>
-                    {
-                        ppt.OpenFile(pargs[1]);
-                        ppt.GetNum();
-                    });
+                {
+                            ppt.OpenFile(pargs[1]);
+                            ppt.GetNum();
+                        });
                     task.Start();
                     slidestroke.Clear();
                     tempList.Clear();
-                }
-            });
+                });
+            }
             if (ppt.presentation != null)
             {
                 timer.Start();
             }
+
+            lvSlides.Items.Clear();
+            for (int i = 0; i < ppt.totpg; i++)
+                lvSlides.Items.Add(new Image() { Height = 108, Width = 192, Margin = new Thickness(5) });
         }
         public static T DeepCopy<T>(T obj)
         {
@@ -146,12 +156,19 @@ namespace SlideCanvas
                         }
                         tempList.Clear();
                         btnPage.Content = ppt.curpg + "/" + ppt.totpg;
+                        this.lvSlides.SelectedIndex = ppt.curpg - 1;
                     }
                     if (ppt.ExpUpd)
                     {
                         try
                         {
                             IEnumerable<string> files = Directory.EnumerateFileSystemEntries(Directory.GetCurrentDirectory() + "\\wwwroot\\Slides", "*", SearchOption.AllDirectories);
+
+                            lvSlides.Items.Clear();
+                            for (int i = 0; i < ppt.totpg; i++)
+                                lvSlides.Items.Add(new Image() { Height = 108, Width = 192, Margin = new Thickness(5) });
+                            //lvSlides.Items.Clear();
+                            // lvSlides.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Tag", System.ComponentModel.ListSortDirection.Ascending));
                             int idx = 0;
                             foreach (var item in files)
                             {
@@ -162,9 +179,15 @@ namespace SlideCanvas
                                 sp.Children.Add(new Image() { Source = new BitmapImage(new Uri(item)), Height = 108, Width = 192 });
                                 sp.Children.Add(new Label() { Content = string.Format("Slide - {0}", idx) });
                                 lvi.Content = sp;
+                                lvSlides.Items.Add(new Image() { Source = new BitmapImage(new Uri(item)), Height = 108, Width = 192, Margin = new Thickness(5), Tag = Convert.ToInt32(item.Trim('.').Replace("幻灯片", "").Replace("Slide", "")) });
                                 lvSlides.Items.Add(lvi);*/
-                                lvSlides.Items.Add(new Image() { Source = new BitmapImage(new Uri(item)), Height = 108, Width = 192, Margin = new Thickness(5) });
+                                //System.Diagnostics.Debug.WriteLine((item.Replace(Directory.GetCurrentDirectory() + "\\wwwroot\\Slides\\", "").Replace("幻灯片", "").Replace("Slide", "").Replace(".PNG", "")));
+                                (lvSlides.Items[Convert.ToInt32(item.Replace(Directory.GetCurrentDirectory() + "\\wwwroot\\Slides\\", "").Replace("幻灯片", "").Replace("Slide", "").Replace(".PNG", "")) - 1] as Image).Source = new BitmapImage(new Uri(item));
                             }
+                            
+                            
+                            //lvSlides.Items.IsLiveSorting = true;
+                            ToggleVisibility(bdrLoad, 500);
                         }
                         catch { }
                         ppt.ExpUpd = false;
@@ -310,25 +333,7 @@ namespace SlideCanvas
         {
             if (ppt.presentation == null)
             {
-                var openFileDialog = new System.Windows.Forms.OpenFileDialog();
-                openFileDialog.Filter = "PowerPoint|*.ppt;*.pptx;*.pptm|所有文件|*.*";
-                var result = openFileDialog.ShowDialog();
-                if (openFileDialog.FileName != null)
-                {
-                    try
-                    {
-                        string filename = openFileDialog.FileName;
-                        ppt.OpenFile(filename);
-                        ppt.FetchInnerText();
-                    }
-                    catch (Exception ex)
-                    {
-                        Excp("哦吼", ex.Message);
-                    }
-                }
-                slidestroke.Clear();
-                tempList.Clear();
-                timer.Start();
+                OpenFile(sender, e);
             }
             else
             {
@@ -394,7 +399,7 @@ namespace SlideCanvas
                 grdSpot.Visibility = Visibility.Visible;
                 lblSpot.Content = "正在启动热点";
                 var connectionProfile = Windows.Networking.Connectivity.NetworkInformation.GetInternetConnectionProfile();
-                
+
                 var tetheringManager = Windows.Networking.NetworkOperators.NetworkOperatorTetheringManager.CreateFromConnectionProfile(connectionProfile);
                 var access = tetheringManager.GetCurrentAccessPointConfiguration();
                 /*access.Ssid = System.Net.Dns.GetHostName() + " - SlideCanvas";
@@ -466,10 +471,12 @@ namespace SlideCanvas
             {
                 case "RadSlc":
                     this.InkCanvasMain.EditingMode = InkCanvasEditingMode.Select;
+                    btnArr.Content = "\uf144";
                     this.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#01FFFFFF"));
                     break;
                 case "RadArr":
                     this.InkCanvasMain.EditingMode = InkCanvasEditingMode.Select;
+                    btnArr.Content = "\uf05a";
                     this.Background = Brushes.Transparent;
                     break;
                 default:
@@ -547,6 +554,59 @@ namespace SlideCanvas
         private void RefreshIP(object sender, RoutedEventArgs e)
         {
             this.lblIP.Content = ppt.ShowUrl();
+        }
+
+        private void OpenFile(object sender, RoutedEventArgs e)
+        {
+            var openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            openFileDialog.Filter = "PowerPoint|*.ppt;*.pptx;*.pptm|所有文件|*.*";
+            var result = openFileDialog.ShowDialog();
+            ToggleVisibility(bdrLoad, Visibility.Visible);
+            if (openFileDialog.FileName != null)
+            {
+                try
+                {
+                    string filename = openFileDialog.FileName;
+
+                    /*if (ppt.presentation != null)
+                    {
+                        System.Diagnostics.Process.Start("start SlideCanvas.exe " + filename);
+                        ppt.Shut();
+                    }*/
+                    ppt.OpenFile(filename);
+                    ppt.FetchInnerText();
+                }
+                catch (Exception ex)
+                {
+                    Excp("哦吼", ex.Message);
+                }
+            }
+            slidestroke.Clear();
+            tempList.Clear();
+            timer.Start();
+
+            lvSlides.Items.Clear();
+            for (int i = 0; i < ppt.totpg; i++)
+                lvSlides.Items.Add(new Image() { Height = 108, Width = 192, Margin = new Thickness(5) });
+        }
+
+        private void AddPage(object sender, RoutedEventArgs e)
+        {
+            ppt.Insert();
+            this.lvSlides.Items.Insert(ppt.curpg, new Image() { Height = 108, Width = 192, Margin = new Thickness(5) });
+            ppt.Next();
+        }
+
+        private void Save(object sender, RoutedEventArgs e)
+        {
+            var sfd = new System.Windows.Forms.SaveFileDialog();
+            sfd.Filter = "SlideCanvas 笔画文件|*.scs";
+            var res = sfd.ShowDialog();
+            if(res == System.Windows.Forms.DialogResult.OK)
+            {
+                File.WriteAllText(sfd.FileName, JsonSerializer.Serialize(this.InkCanvasMain.Strokes));
+            }
+            
         }
     }
 }

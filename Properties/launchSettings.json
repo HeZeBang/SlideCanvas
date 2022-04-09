@@ -1,8 +1,7 @@
 {
   "profiles": {
     "SlideCanvas": {
-      "commandName": "Project",
-      "commandLineArgs": "\"D:\\Users\\ZAMBAR\\Documents\\校园安全\\打造人类高质量校园.pptx\""
+      "commandName": "Project"
     }
   }
 }

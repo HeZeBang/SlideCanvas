@@ -15,6 +15,7 @@
     <Copyright>Copyright (C) 2022 ZAMBAR</Copyright>
     <RepositoryUrl>https://github.com/HeZeBang/SlideCanvas.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>

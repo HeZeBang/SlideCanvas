@@ -65,12 +65,24 @@ namespace SlideCanvas
         }
         internal void Shut()
         {
+            try
+            {
+                // 关闭所有 COM　对象，以及当前打开的PPT
+                ClearComRefs();
+                // 停止运行服务器
+                this.webHost.StopAsync();
+                this.webHost.WaitForShutdown();
+            }
+            catch { }
+            Process.GetCurrentProcess().Kill();
+        }
+        internal void Clear()
+        {
             // 关闭所有 COM　对象，以及当前打开的PPT
             ClearComRefs();
             // 停止运行服务器
             this.webHost.StopAsync();
             this.webHost.WaitForShutdown();
-            Process.GetCurrentProcess().Kill();
         }
         private async void ConfigureWebApp(IApplicationBuilder app)
         {
@@ -238,13 +250,14 @@ namespace SlideCanvas
             return false;
 
         }
-        private void ClearComRefs()
+        internal void ClearComRefs()
         {
             try
             {
                 if (this.presentation != null)
                 {
-                    T(this.presentation.Application).Quit();
+                    //T(this.presentation.Application).Quit();
+                    T(T(presentation.SlideShowWindow).View).Exit();
                     this.presentation = null;
                 }
             }
@@ -269,6 +282,7 @@ namespace SlideCanvas
             pptApp.Visible = true;
             dynamic presentations = T(pptApp.Presentations);
             this.presentation = T(presentations.Open(filename));
+            T(this.presentation.SlideShowSettings).Run();
             DirectoryInfo di = new DirectoryInfo(Directory.GetCurrentDirectory() + "\\wwwroot\\Slides");
             if (di.Exists)
             {
@@ -286,7 +300,6 @@ namespace SlideCanvas
                     ExportAsPng();
                 });
             }
-            T(this.presentation.SlideShowSettings).Run();
         }
         private string GetInnerText(dynamic part)
         {
@@ -354,6 +367,25 @@ namespace SlideCanvas
                 return false;
             }
             T(T(presentation.SlideShowWindow).View).Next();
+            return true;
+        }
+        internal bool Insert(int page)
+        {
+            if (this.presentation == null)
+            {
+                return false;
+            }
+            T(T(pptApp.ActivePresentation).Slides).Add(page + 1, 12);
+            //http://www.360doc.com/content/19/1227/16/59724406_882555619.shtml
+            return true;
+        }
+        internal bool Insert()
+        {
+            if (this.presentation == null)
+            {
+                return false;
+            }
+            T(T(pptApp.ActivePresentation).Slides).Add(curpg + 1, 12);
             return true;
         }
         internal bool Zoom(int index)

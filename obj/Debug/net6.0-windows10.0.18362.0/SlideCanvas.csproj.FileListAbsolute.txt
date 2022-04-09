@@ -1,3 +1,4 @@
+D:\Codes\SlideCanvas\bin\Debug\net6.0-windows10.0.18362.0\Resources\iconfont.ttf
 D:\Codes\SlideCanvas\bin\Debug\net6.0-windows10.0.18362.0\wwwroot\css\app.5d5bd3a6.css
 D:\Codes\SlideCanvas\bin\Debug\net6.0-windows10.0.18362.0\wwwroot\css\chunk-vendors.733c643b.css
 D:\Codes\SlideCanvas\bin\Debug\net6.0-windows10.0.18362.0\wwwroot\css\css.css
@@ -164,11 +165,14 @@ D:\Codes\SlideCanvas\bin\Debug\net6.0-windows10.0.18362.0\WinRT.Runtime.dll
 D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\SlideCanvas.csproj.AssemblyReference.cache
 D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\MainWindow.g.cs
 D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\App.g.cs
+D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\SlideCanvas_Content.g.cs
 D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\SlideCanvas_MarkupCompile.cache
 D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\SlideCanvas_MarkupCompile.lref
 D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\App.baml
 D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\MainWindow.baml
 D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\SlideCanvas.g.resources
+D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\SlideCanvas.Properties.Resources.resources
+D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\SlideCanvas.csproj.GenerateResource.cache
 D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\SlideCanvas.GeneratedMSBuildEditorConfig.editorconfig
 D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\SlideCanvas.AssemblyInfoInputs.cache
 D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\SlideCanvas.AssemblyInfo.cs
@@ -179,7 +183,3 @@ D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\refint\SlideCanvas.dll
 D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\SlideCanvas.pdb
 D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\SlideCanvas.genruntimeconfig.cache
 D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\ref\SlideCanvas.dll
-D:\Codes\SlideCanvas\bin\Debug\net6.0-windows10.0.18362.0\Resources\iconfont.ttf
-D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\SlideCanvas_Content.g.cs
-D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\SlideCanvas.Properties.Resources.resources
-D:\Codes\SlideCanvas\obj\Debug\net6.0-windows10.0.18362.0\SlideCanvas.csproj.GenerateResource.cache

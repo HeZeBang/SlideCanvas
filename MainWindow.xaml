@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SlideCanvas"
-        xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         mc:Ignorable="d"
         ui:ThemeManager.IsThemeAware="True"
@@ -25,18 +24,29 @@
     <Grid x:Name="grdMain" Background="Transparent">
         <Border Background="Transparent">
             <InkCanvas x:Name="InkCanvasMain" Background="Transparent" GotFocus="CanvasFoc" SelectionChanged="CanvasSeleChanged" TouchDown="CanvasTouchDown" TouchUp="CanvasPTouchUp"/>
+        </Border>   
+        <Border x:Name="bdrLoad" Background="#AA000000" >
+            <Label FontFamily="Microsoft YaHei Light" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="48" Foreground="White" Content="初始化中"/>
         </Border>
+        
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"></ColumnDefinition>
                 <ColumnDefinition Width="600"></ColumnDefinition>
                 <ColumnDefinition Width="350"></ColumnDefinition>
             </Grid.ColumnDefinitions>
+
             <Border CornerRadius="3" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" Height="65" Grid.Column="0" VerticalAlignment="Bottom" Margin="10,0,0,5" HorizontalAlignment="Left">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                 </Border.Effect>
-                <WrapPanel x:Name="MenuPanel" ItemHeight="65" ItemWidth="65">
+                <WrapPanel x:Name="MenuPanel" ItemHeight="65" ItemWidth="65" Margin="5,0,5,0">
+                    <!--Border CornerRadius="3" Height="55" Width="55">
+                        <Button x:Name="btnOpen" Height="55" Width="55" Foreground="White" Content="&#xefdc;" FontSize="30" FontFamily="./Resources/#iconfont" Click="OpenFile"/>
+                    </Border-->
+                    <Border CornerRadius="3" Height="55" Width="55">
+                        <Button x:Name="btnSave" Height="55" Width="55" Foreground="White" Content="&#xf087;" FontSize="30" FontFamily="./Resources/#iconfont" Click="Save"/>
+                    </Border>
                     <Border CornerRadius="3" Height="55" Width="55">
                         <Button x:Name="btnExit" Height="55" Width="55" Foreground="White" Content="&#xf087;" FontSize="30" FontFamily="./Resources/#iconfont" Click="Exit"/>
                     </Border>
@@ -49,7 +59,7 @@
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                 </Border.Effect>
-                <WrapPanel x:Name="ToolPanel" ItemHeight="65" ItemWidth="75">
+                <WrapPanel x:Name="ToolPanel" ItemHeight="65" ItemWidth="75" Margin="5,0,5,0">
                     <Border CornerRadius="3" Height="55" Width="65">
                         <Button x:Name="btnArr" Content="&#xf05a;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ToggleButton"/>
                     </Border>
@@ -278,11 +288,11 @@
                 </StackPanel>
             </Border>
             <Grid Height="65" Grid.Column="2" VerticalAlignment="Bottom" Margin="0,0,10,5" HorizontalAlignment="Right">
-                <Border CornerRadius="3" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" Width="200" HorizontalAlignment="Right">
+                <Border CornerRadius="3" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" HorizontalAlignment="Right">
                     <Border.Effect>
                         <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                     </Border.Effect>
-                    <WrapPanel x:Name="SlidePanel" ItemHeight="65" ItemWidth="60" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <WrapPanel x:Name="SlidePanel" ItemHeight="65" ItemWidth="60" Margin="5,0,5,0" Orientation="Horizontal" HorizontalAlignment="Center">
                         <Border CornerRadius="3" Height="55" Width="55">
                             <Button x:Name="btnPrev" Content="&#xef19;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="55" Click="PageChange" FontWeight="Normal"/>
                         </Border>
@@ -291,6 +301,9 @@
                         </Border>
                         <Border  CornerRadius="3" Height="55" Width="55" >
                             <Button x:Name="btnNext" Content="&#xef1f;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="55" Click="PageChange"/>
+                        </Border>
+                        <Border  CornerRadius="3" Height="55" Width="55" >
+                            <Button x:Name="btnAdd" Content="&#xe64e;" FontSize="24" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="55" Click="AddPage"/>
                         </Border>
                     </WrapPanel>
                 </Border>
