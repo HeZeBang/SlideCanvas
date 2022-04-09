@@ -4,11 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SlideCanvas"
+        xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         mc:Ignorable="d"
         ui:ThemeManager.IsThemeAware="True"
         Title="SlideCanvas" Height="768" Width="1366" 
-        Background="#01FFFFFF" WindowStyle="None" AllowsTransparency="True" Opacity="1.0" WindowState="Maximized" Deactivated="Window_Deactivated" Closing="CloseWindow" Icon="/SlideCanvas.png" KeyDown="CanvasKeyDown">
+        Background="#01FFFFFF" WindowStyle="None" AllowsTransparency="True" Opacity="1.0" WindowState="Maximized" Closing="CloseWindow" Icon="/SlideCanvas.png" KeyDown="CanvasKeyDown" LostKeyboardFocus="Window_Deactivated">
 
     <Window.Resources>
         <Storyboard x:Key="FadeIn">
@@ -23,8 +24,7 @@
     </Window.Resources>
     <Grid x:Name="grdMain" Background="Transparent">
         <Border Background="Transparent">
-            <InkCanvas x:Name="InkCanvasMain" Background="Transparent" GotFocus="CanvasFoc" SelectionChanged="CanvasSeleChanged" TouchDown="CanvasTouchDown" PreviewTouchUp="CanvasPTouchUp">
-            </InkCanvas>
+            <InkCanvas x:Name="InkCanvasMain" Background="Transparent" GotFocus="CanvasFoc" SelectionChanged="CanvasSeleChanged" TouchDown="CanvasTouchDown" TouchUp="CanvasPTouchUp"/>
         </Border>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -51,16 +51,16 @@
                 </Border.Effect>
                 <WrapPanel x:Name="ToolPanel" ItemHeight="65" ItemWidth="75">
                     <Border CornerRadius="3" Height="55" Width="65">
-                        <Button x:Name="btnArr" Content="&#xf05a;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ToggleBtn"/>
+                        <Button x:Name="btnArr" Content="&#xf05a;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ToggleButton"/>
                     </Border>
                     <!--Border CornerRadius="3" Height="55" Width="65">
-                        <Button x:Name="btnSlc" Content="&#xf039;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ToggleBtn"/>
+                        <Button x:Name="btnSlc" Content="&#xf039;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ToggleButton"/>
                     </Border-->
                     <Border CornerRadius="3" Height="55" Width="65" Background="#FF4DFF4D">
-                        <Button x:Name="btnPen" Content="&#xf06c;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ToggleBtn"/>
+                        <Button x:Name="btnPen" Content="&#xf06c;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ToggleButton"/>
                     </Border>
                     <Border CornerRadius="3" Height="55" Width="65">
-                        <Button x:Name="btnEra" Content="&#xefb1;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ToggleBtn"/>
+                        <Button x:Name="btnEra" Content="&#xefb1;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ToggleButton"/>
                     </Border>
                     <Border CornerRadius="3" Height="55" Width="65">
                         <Button x:Name="btnClr" Content="&#xef2f;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="65" Click="ClearCanvas"/>
@@ -161,13 +161,14 @@
                             <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                         </Border.Effect>
                         <StackPanel>
-                            <RadioButton x:Name="RadSlc" GroupName="Arrow" Margin="3,5,0,0" Checked="ArrowTog" IsChecked="True" >选择</RadioButton>
-                            <RadioButton x:Name="RadArr" GroupName="Arrow" Margin="3,5,0,0" Checked="ArrowTog" >鼠标</RadioButton>
+                            <RadioButton x:Name="RadSlc" GroupName="Arrow" Margin="3,5,0,0" Checked="ToggleArrow" IsChecked="True" >选择</RadioButton>
+                            <RadioButton x:Name="RadArr" GroupName="Arrow" Margin="3,5,0,0" Checked="ToggleArrow" >鼠标</RadioButton>
+                            
                         </StackPanel>
                     </Border>
                 </Grid>
             </Border>
-            <Border x:Name="bdrSet" CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" Grid.Column="1" Width="260" Height="340" Margin="0,80,40,80" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+            <Border x:Name="bdrSet" CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" Grid.Column="1" Width="260" Height="400" Margin="0,80,40,80" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                 </Border.Effect>
@@ -177,7 +178,7 @@
                         <Border.Effect>
                             <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                         </Border.Effect>
-                        <ui:ScrollViewerEx>
+                        <ui:ScrollViewerEx PanningMode="VerticalOnly">
                             <StackPanel Margin="5,5,5,5">
                                 <Label FontSize="20" FontFamily="./Resources/#Sarasa Cascadia TC" Visibility="Collapsed">This is an embedded font</Label>
                                 <Label Content="高级设置" Margin="0,5,0,5"  FontSize="17" FontFamily="Microsoft YaHei"/>
@@ -198,16 +199,17 @@
                                 <Label Margin="5,5,5,5"  Content="1. 使你的设备连接WLAN" FontFamily="Microsoft YaHei Light"/>
                                 <Label Margin="10,0,10,5"  Content="启动热点" FontFamily="Microsoft YaHei Light"/>
                                 <ui:ToggleSwitch Name="swcSpot"   Margin="10,0,0,10" Toggled="ToggleWLAN"></ui:ToggleSwitch>
-                                <Grid Name="grdSpot" HorizontalAlignment="Center" Visibility="Collapsed">
+                                <StackPanel Name="grdSpot" HorizontalAlignment="Center" Visibility="Collapsed">
                                     <Image Name="bmpSpot" Height="125" Width="125" VerticalAlignment="Top"/>
-                                    <Label Name="lblSpot"   Margin="0,125,0,0" Content="SSID/PWD" FontFamily="Microsoft YaHei Light" />
-                                </Grid>
+                                    <Label Name="lblSpot"   Margin="0,5,0,0" Content="SSID/PWD" FontFamily="Microsoft YaHei Light" />
+                                </StackPanel>
                                 <Label Margin="5,5,5,5" Content="2. 扫描二维码" FontFamily="Microsoft YaHei Light"/>
 
-                                <Grid HorizontalAlignment="Center">
+                                <StackPanel HorizontalAlignment="Center">
                                     <Image Name="bmpIP" Height="125" Width="125" VerticalAlignment="Top"/>
-                                    <Label Margin="0,125,0,0"   Name="lblIP" Content="IP/PORT" FontFamily="Microsoft YaHei Light" />
-                                </Grid>
+                                    <Button Click="RefreshIP">刷新IP地址</Button>
+                                    <Label Margin="0,5,0,0"   Name="lblIP" Content="IP/PORT" FontFamily="Microsoft YaHei Light" />
+                                </StackPanel>
                             </StackPanel>
                         </ui:ScrollViewerEx>
                     </Border>
@@ -227,18 +229,52 @@
                     </Border>
                 </Grid>
             </Border>
-            <Border x:Name="bdrInfo" CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" Grid.Column="2" Margin="0,0,10,72" HorizontalAlignment="Right" Width="259" Height="Auto" VerticalAlignment="Bottom" Visibility="Visible">
+            <Border x:Name="bdrSlide" CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" Grid.Column="2" Margin="0,0,10,72" HorizontalAlignment="Right" Width="Auto" Height="Auto" VerticalAlignment="Bottom">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                 </Border.Effect>
                 <StackPanel>
-                    <Label x:Name="infTitle" Content="Title" Margin="5,5,5,0" FontSize="20"  HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+                    <Label Content="幻灯片漫游" Margin="5,5,5,5" FontSize="20"  HorizontalAlignment="Stretch" VerticalAlignment="Top" FontFamily="Microsoft YaHei UI Light" FontWeight="Normal" FontStyle="Italic"/>
                     <Border CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltHighRevealBackgroundBrush}" Margin="5,0,5,5">
                         <Border.Effect>
                             <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                         </Border.Effect>
-                        <Label x:Name="infContent" Content="Content" Margin="5,5,5,5"/>
+                        <ui:ScrollViewerEx PanningMode="VerticalOnly" Height="500">
+                            <ui:ListView x:Name="lvSlides" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" ItemClick="ItemClick" IsItemClickEnabled="True">
+                                <!--ListViewItem x:Name="lviSample">
+                                    <StackPanel Orientation="Vertical">
+                                        <Image Source="/Resources/SlideCanvas.png" Width="144" Height="81"/>
+                                        <TextBlock TextAlignment="Center">Test</TextBlock>
+                                    </StackPanel>
+                                </ListViewItem-->
+                            </ui:ListView>
+                        </ui:ScrollViewerEx>
                     </Border>
+                </StackPanel>
+            </Border>
+            <Border x:Name="bdrInfo" CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" Grid.Column="2" Margin="0,0,10,72" HorizontalAlignment="Right" Width="259" Height="Auto" VerticalAlignment="Bottom" Visibility="Collapsed">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
+                </Border.Effect>
+                <StackPanel>
+                    <Label x:Name="infTitle" Content="Title" Margin="5,5,5,0" FontSize="20"  HorizontalAlignment="Stretch" VerticalAlignment="Top" FontFamily="Microsoft YaHei UI Light" FontWeight="Normal" FontStyle="Italic"/>
+                    <Border CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltHighRevealBackgroundBrush}" Margin="5,0,5,5">
+                        <Border.Effect>
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
+                        </Border.Effect>
+                        <Label x:Name="infContent" Content="Content" Margin="5,5,5,5" FontFamily="Microsoft YaHei UI"/>
+                    </Border>
+                    <!--Rectangle
+                RadiusX="4"
+                RadiusY="4"
+                Fill="{DynamicResource SystemChromeLow}"
+                Stroke="{DynamicResource DialogBorderBrush}"
+                StrokeThickness="1"
+                        Height="50" Margin="5,5,5,5">
+                        <Rectangle.Effect>
+                            <DropShadowEffect BlurRadius="32" Opacity="0.28" ShadowDepth="1" />
+                        </Rectangle.Effect>
+                    </Rectangle-->
                 </StackPanel>
             </Border>
             <Grid Height="65" Grid.Column="2" VerticalAlignment="Bottom" Margin="0,0,10,5" HorizontalAlignment="Right">

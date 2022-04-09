@@ -25,11 +25,13 @@ namespace SlideCanvas
 
         private IWebHost webHost;
 
-        internal dynamic presentation;
+        internal dynamic presentation, pptApp;
 
         internal string ip = "", page = "", info = "";
 
         internal int curpg = 0, totpg = 0;
+
+        internal bool ExpUpd = false;
 
         internal BitmapImage bim;
 
@@ -40,12 +42,13 @@ namespace SlideCanvas
         private static Hashtable user = new Hashtable();
         internal PPTInterface()
         {
+            ExpUpd = false;
             if (!NetworkInterface.GetIsNetworkAvailable())
             {
                 MessageBox.Show("网络未连接，程序可能会运行异常，请连接网络后重试！");
             }
             // 显示IP
-            ShowUrl();
+            _ = ShowUrl();
             // 配置服务器
             this.webHost = new WebHostBuilder()
                 .UseKestrel()
@@ -69,7 +72,7 @@ namespace SlideCanvas
             this.webHost.WaitForShutdown();
             Process.GetCurrentProcess().Kill();
         }
-        private void ConfigureWebApp(IApplicationBuilder app)
+        private async void ConfigureWebApp(IApplicationBuilder app)
         {
             app.UseDefaultFiles();
             app.UseStaticFiles();
@@ -88,47 +91,51 @@ namespace SlideCanvas
                 if (path == "/api/report")
                 {
                     string value = request.Query["value"];
-                    page = value;
+                    await Task.Run(() => { page = value; });
                     response.StatusCode = 200;
                     await response.WriteAsync("ok");
                 }
                 else if (path == "/api/getNote")
                 {
                     string notesText = "";
-                    if (this.presentation == null)
-                    {
-                        return;
-                    }
-                    try
-                    {
-                        dynamic notesPage = T(T(T(T(presentation.SlideShowWindow).View).Slide).NotesPage);
-                        notesText = GetInnerText(notesPage);
-                    }
-                    catch (COMException ex)
-                    {
-                        notesText = "";
-                    }
+                    _ = ((Func<Task>)(async () =>
+                      {
+                          if (this.presentation == null)
+                          {
+                              return;
+                          }
+                          try
+                          {
+                              dynamic notesPage = T(T(T(T(presentation.SlideShowWindow).View).Slide).NotesPage);
+                              notesText = GetInnerText(notesPage);
+                          }
+                          catch (COMException ex)
+                          {
+                              notesText = "";
+                          }
+                      })).Invoke();
                     await response.WriteAsync(notesText);
                 }
                 else if (path == "/api/next")
                 {
                     response.StatusCode = 200;
-                    if (this.presentation == null)
+                    await Task.Run(() =>
                     {
-                        return;
-                    }
-                    try
-                    {
-                        T(T(this.presentation.SlideShowWindow).View).Next();
-                        GetNum();
-                        hasRun = true;
-                    }
-                    catch (COMException e)
-                    {
-                        hasRun = false;
-                    }
-
-
+                        if (this.presentation == null)
+                        {
+                            return;
+                        }
+                        try
+                        {
+                            T(T(this.presentation.SlideShowWindow).View).Next();
+                            GetNum();
+                            hasRun = true;
+                        }
+                        catch (COMException e)
+                        {
+                            hasRun = false;
+                        }
+                    });
 
                     if (hasRun)
                     {
@@ -142,20 +149,23 @@ namespace SlideCanvas
                 else if (path == "/api/previous")
                 {
                     response.StatusCode = 200;
-                    if (this.presentation == null)
+                    await Task.Run(() =>
                     {
-                        return;
-                    }
-                    try
-                    {
-                        T(T(this.presentation.SlideShowWindow).View).Previous();
-                        GetNum();
-                        hasRun = true;
-                    }
-                    catch (COMException e)
-                    {
-                        hasRun = false;
-                    }
+                        if (this.presentation == null)
+                        {
+                            return;
+                        }
+                        try
+                        {
+                            T(T(this.presentation.SlideShowWindow).View).Previous();
+                            GetNum();
+                            hasRun = true;
+                        }
+                        catch (COMException e)
+                        {
+                            hasRun = false;
+                        }
+                    });
 
                     if (hasRun)
                     {
@@ -174,10 +184,39 @@ namespace SlideCanvas
             });
 
         }
-        internal void ShowUrl()
+        internal string ShowUrl()
         {
             this.ip = "http://" + GetIPUtil.IPV4() + ":" + port;
-            return;
+            return "http://" + GetIPUtil.IPV4() + ":" + port;
+        }
+
+        internal void Goto(int pagenum)
+        {
+            if(pagenum <= totpg)
+            {
+                try
+                {
+                    T(T(this.presentation.SlideShowWindow).View).GotoSlide(pagenum, 0);
+                }
+                catch { }
+            }
+        }
+        internal bool ExportAsPng()
+        {
+            try
+            {
+                if (this.presentation != null)
+                {
+                    T(this.presentation).Export(Directory.GetCurrentDirectory() + "\\wwwroot\\Slides", "png", 192, 108);
+                    ExpUpd = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+                return false;
+            }
+            return true;
         }
         private bool IsAuth(IRequestCookieCollection cookies, HttpResponse response)
         {
@@ -218,7 +257,7 @@ namespace SlideCanvas
             this.comReference = new COMReferenceTracker();
         }
 
-        private dynamic T(dynamic comObj)
+        internal dynamic T(dynamic comObj)
         {
             return this.comReference.T(comObj);
         }
@@ -226,10 +265,27 @@ namespace SlideCanvas
         internal void OpenFile(string filename)
         {
             this.ClearComRefs();
-            dynamic pptApp = T(PowerPointHelper.CreatePowerPointApplication());
+            pptApp = T(PowerPointHelper.CreatePowerPointApplication());
             pptApp.Visible = true;
             dynamic presentations = T(pptApp.Presentations);
             this.presentation = T(presentations.Open(filename));
+            DirectoryInfo di = new DirectoryInfo(Directory.GetCurrentDirectory() + "\\wwwroot\\Slides");
+            if (di.Exists)
+            {
+                di.Delete(true);
+                Task.Run(() =>
+                {
+                    ExportAsPng();
+                });
+            }
+            else
+            {
+                // di.Create();
+                Task.Run(() =>
+                {
+                    ExportAsPng();
+                });
+            }
             T(this.presentation.SlideShowSettings).Run();
         }
         private string GetInnerText(dynamic part)
@@ -262,7 +318,7 @@ namespace SlideCanvas
             dynamic notesPage = T(T(T(T(presentation.SlideShowWindow).View).Slide).NotesPage);
             string notesText = GetInnerText(notesPage);
         }
-        
+
         internal void GetNum()
         {
             if (this.presentation == null)
@@ -321,8 +377,9 @@ namespace SlideCanvas
                             presentation.SlideShowWindow.Activate();
                             SendKeys.SendWait("G");
                         });
-                        SendKeys.SendWait("G");
-                    }catch (Exception ex2)
+                        SendKeys.SendWait("-");
+                    }
+                    catch (Exception ex2)
                     {
                         System.Diagnostics.Debug.WriteLine(ex2.Message);
                         return false;

@@ -9,7 +9,7 @@
 	  <verVersion>1.0.0.0</verVersion>
 	  <sauthAuthors>ZAMBAR</sauthAuthors>
     <StartupObject></StartupObject>
-    <ApplicationIcon>ahheq-eio4o-002.ico</ApplicationIcon>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
     <PackageIcon>SlideCanvas.png</PackageIcon>
     <PackageProjectUrl>https://github.com/HeZeBang/SlideCanvas</PackageProjectUrl>
     <Copyright>Copyright (C) 2022 ZAMBAR</Copyright>
@@ -22,18 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <COMReference Include="Microsoft.Office.Interop.PowerPoint">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>12</VersionMinor>
-      <VersionMajor>2</VersionMajor>
-      <Guid>91493440-5a91-11cf-8700-00aa0060263b</Guid>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Owin" Version="6.0.3" />
     <PackageReference Include="ModernWpfUI" Version="0.9.4" />
     <PackageReference Include="QRCoder" Version="1.4.3" />
@@ -42,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <Content Include="ahheq-eio4o-002.ico" />
+	  <Content Include="favicon.ico" />
 	  <Resource Include="Resources\iconfont.ttf">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Resource>
@@ -112,6 +100,10 @@
     <None Update="wwwroot\old\logo.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\" />
   </ItemGroup>
 
 </Project>

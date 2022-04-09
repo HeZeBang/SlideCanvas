@@ -2,6 +2,8 @@
 using QRCoder;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -29,14 +31,14 @@ namespace SlideCanvas
             InitializeComponent();
 
             this.btnArr.FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./Resources/#iconfont");
-            
-            if (ThemeManager.Current.ApplicationTheme != ApplicationTheme.Dark)
-                togDarkMode.IsOn = true;
+
+            togDarkMode.IsOn = false;
+            ThemeManager.Current.ApplicationTheme = ApplicationTheme.Light;
 
             this.InkCanvasMain.EraserShape = new RectangleStylusShape(30, 30 * 16 / 9);
 
             CanvasFoc(this, new RoutedEventArgs());
-            
+
 
             this.sldSize.Minimum = InkCanvasMain.DefaultDrawingAttributes.Width;
             var drawingAttributes = new DrawingAttributes()
@@ -55,6 +57,7 @@ namespace SlideCanvas
             timer.Start();
             InitAsync();
 
+            ToggleButton(btnPen, new RoutedEventArgs());
             Excp("WELCOME", "TO SLIDECANVAS");
             InkCanvasMain.Strokes.StrokesChanged += Strokes_StrokesChanged;
         }
@@ -83,7 +86,7 @@ namespace SlideCanvas
             await Task.Run(() =>
             {
                 string[] pargs = Environment.GetCommandLineArgs();
-                
+
                 if (pargs.Length > 1)
                 {
                     Task task = new(() =>
@@ -100,7 +103,19 @@ namespace SlideCanvas
             {
                 timer.Start();
             }
+        }
+        public static T DeepCopy<T>(T obj)
+        {
+            if (obj is string || obj.GetType().IsValueType) return obj;
 
+            object retval = Activator.CreateInstance(obj.GetType());
+            FieldInfo[] fields = obj.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            foreach (FieldInfo field in fields)
+            {
+                try { field.SetValue(retval, DeepCopy(field.GetValue(obj))); }
+                catch { }
+            }
+            return (T)retval;
         }
         private void Strokes_StrokesChanged(object sender, System.Windows.Ink.StrokeCollectionChangedEventArgs e)
         {
@@ -131,6 +146,28 @@ namespace SlideCanvas
                         }
                         tempList.Clear();
                         btnPage.Content = ppt.curpg + "/" + ppt.totpg;
+                    }
+                    if (ppt.ExpUpd)
+                    {
+                        try
+                        {
+                            IEnumerable<string> files = Directory.EnumerateFileSystemEntries(Directory.GetCurrentDirectory() + "\\wwwroot\\Slides", "*", SearchOption.AllDirectories);
+                            int idx = 0;
+                            foreach (var item in files)
+                            {
+                                /*idx++;
+                                ListViewItem lvi = new();
+                                Grid sp = new();
+                                sp.Background = Brushes.Transparent;
+                                sp.Children.Add(new Image() { Source = new BitmapImage(new Uri(item)), Height = 108, Width = 192 });
+                                sp.Children.Add(new Label() { Content = string.Format("Slide - {0}", idx) });
+                                lvi.Content = sp;
+                                lvSlides.Items.Add(lvi);*/
+                                lvSlides.Items.Add(new Image() { Source = new BitmapImage(new Uri(item)), Height = 108, Width = 192, Margin = new Thickness(5) });
+                            }
+                        }
+                        catch { }
+                        ppt.ExpUpd = false;
                     }
                 }
             }
@@ -168,12 +205,12 @@ namespace SlideCanvas
         }
 
 
-        private void ToggleBtn(object sender, RoutedEventArgs e)
+        private void ToggleButton(object sender, RoutedEventArgs e)
         {
             CanvasFoc(sender, new RoutedEventArgs());
 
             this.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#01FFFFFF"));
-            
+
             foreach (Border item in ToolPanel.Children)
                 item.Background = null;
             switch ((sender as Button).Name)
@@ -183,7 +220,11 @@ namespace SlideCanvas
                     {
                         ToggleVisibility(bdrArrSet, Visibility.Visible);
                     }
-                    this.InkCanvasMain.EditingMode = InkCanvasEditingMode.Select;
+                    else
+                    {
+                        this.RadArr.IsChecked = true;
+                        ToggleArrow(RadArr, e);
+                    }
                     break;
                 case "btnPen":
                     if (this.InkCanvasMain.ActiveEditingMode == InkCanvasEditingMode.Ink)
@@ -200,16 +241,18 @@ namespace SlideCanvas
                     }
                     this.InkCanvasMain.EditingMode = InkCanvasEditingMode.EraseByPoint;
                     break;
+                case "btnPage":
+                    this.RadArr.IsChecked = true;
+                    break;
                 default:
                     break;
             }
-            ((sender as Button).Parent as Border).Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF4DFF4D"));
+            if ((sender as Button).Name != "btnPage")
+                ((sender as Button).Parent as Border).Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF4DFF4D"));
+            else
+                (btnArr.Parent as Border).Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF4DFF4D"));
         }
-        private void Window_Deactivated(object sender, System.EventArgs e)
-        {
-            Window window = (Window)sender;
-            window.Topmost = true;
-        }
+
 
         private void ColorPick(object sender, RoutedEventArgs e)
         {
@@ -230,6 +273,7 @@ namespace SlideCanvas
             ToggleVisibility(bdrSet, Visibility.Collapsed);
             ToggleVisibility(bdrArrSet, Visibility.Collapsed);
             ToggleVisibility(bdrClr, Visibility.Collapsed);
+            // ToggleVisibility(bdrSlide, Visibility.Collapsed);
         }
         private void ToggleVisibility(Border character, Visibility visibility)
         {
@@ -253,6 +297,13 @@ namespace SlideCanvas
                 Thread.Sleep(msec);
             });
             ToggleVisibility(character, Visibility.Collapsed);
+        }
+        private void ToggleVisibility(Border character)
+        {
+            if (character.Visibility == Visibility.Visible)
+                ToggleVisibility(character, Visibility.Hidden);
+            else
+                ToggleVisibility(character, Visibility.Visible);
         }
 
         private void PageClick(object sender, RoutedEventArgs e)
@@ -281,9 +332,10 @@ namespace SlideCanvas
             }
             else
             {
-                if (!ppt.Zoom(20))
-                    Excp("Error", "打开缩略图失败");
-                ToggleBtn(btnArr, e);
+                /*if (!ppt.Zoom(20))
+                    Excp("Error", "打开缩略图失败");*/
+                ToggleVisibility(bdrSlide);
+                // ToggleButton(sender, e);
             }
         }
 
@@ -306,14 +358,14 @@ namespace SlideCanvas
                 }
                 if (ppt.presentation != null)
                     ppt.GetNum();
-                btnPage.Content = ppt.curpg + "/" +  ppt.totpg;
+                btnPage.Content = ppt.curpg + "/" + ppt.totpg;
             }
             catch (Exception ex)
             {
                 Excp("Error", ex.ToString());
             }
         }
-        private async void Excp(string title, string content)
+        public async void Excp(string title, string content)
         {
             Border bdr = bdrInfo;
             ((bdr.Child as StackPanel).Children[0] as Label).Content = title;
@@ -340,22 +392,24 @@ namespace SlideCanvas
             if (swcSpot.IsOn)
             {
                 grdSpot.Visibility = Visibility.Visible;
-                lblSpot.Content = "Launching...";
+                lblSpot.Content = "正在启动热点";
                 var connectionProfile = Windows.Networking.Connectivity.NetworkInformation.GetInternetConnectionProfile();
+                
                 var tetheringManager = Windows.Networking.NetworkOperators.NetworkOperatorTetheringManager.CreateFromConnectionProfile(connectionProfile);
                 var access = tetheringManager.GetCurrentAccessPointConfiguration();
-                access.Ssid = System.Net.Dns.GetHostName() + " - SlideCanvas";
-                access.Passphrase = "SlideCanvas";
+                /*access.Ssid = System.Net.Dns.GetHostName() + " - SlideCanvas";
+                access.Passphrase = "SlideCanvas";*/
                 var result = await tetheringManager.StartTetheringAsync();
                 if (result.Status == TetheringOperationStatus.Success)
                 {
-                    lblSpot.Content = string.Format("SSID: {0}\nPwd: {1}", access.Ssid, access.Passphrase);
+                    lblSpot.Content = string.Format("网络名称: {0}\n密码: {1}\n验证方式: {2}\n加密方式: {3}\n", access.Ssid, access.Passphrase, connectionProfile.NetworkSecuritySettings.NetworkAuthenticationType.ToString(), connectionProfile.NetworkSecuritySettings.NetworkEncryptionType.ToString());
+                    this.lblIP.Content = ppt.ShowUrl();
                     QRCodeGenerator qrGenerator = new QRCodeGenerator();
-                    QRCodeData qrCodeData = qrGenerator.CreateQrCode(string.Format("WIFI:T:WPA;S:{0};P:{1};;", access.Ssid, access.Passphrase), QRCodeGenerator.ECCLevel.Q);
+                    QRCodeData qrCodeData = qrGenerator.CreateQrCode(string.Format("WIFI:T:{0};S:{1};P:{2};;", connectionProfile.NetworkSecuritySettings.NetworkEncryptionType.ToString(), access.Ssid, access.Passphrase), QRCodeGenerator.ECCLevel.Q);
                     QRCode qrCode = new QRCode(qrCodeData);
                     System.Drawing.Bitmap ImageOriginalBase = qrCode.GetGraphic(20);
                     BitmapImage bitmapImage = new BitmapImage();
-                    using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+                    using (System.IO.MemoryStream ms = new MemoryStream())
                     {
                         ImageOriginalBase.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
                         bitmapImage.BeginInit();
@@ -368,7 +422,7 @@ namespace SlideCanvas
                 }
                 else
                 {
-                    lblSpot.Content = "Failed to Launch.";
+                    lblSpot.Content = "启动失败";
                 }
             }
             else
@@ -379,7 +433,7 @@ namespace SlideCanvas
                 if (result.Status == TetheringOperationStatus.Success)
                     grdSpot.Visibility = Visibility.Collapsed;
                 else
-                    lblSpot.Content = "Failed to Shut.";
+                    lblSpot.Content = "关闭失败";
                 grdSpot.Visibility = Visibility.Collapsed;
             }
         }
@@ -406,13 +460,16 @@ namespace SlideCanvas
             Excp("芜湖~", "Made by ZAMBAR~");
         }
 
-        private void ArrowTog(object sender, RoutedEventArgs e)
+        private void ToggleArrow(object sender, RoutedEventArgs e)
         {
             switch ((sender as RadioButton).Name)
             {
                 case "RadSlc":
+                    this.InkCanvasMain.EditingMode = InkCanvasEditingMode.Select;
+                    this.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#01FFFFFF"));
                     break;
                 case "RadArr":
+                    this.InkCanvasMain.EditingMode = InkCanvasEditingMode.Select;
                     this.Background = Brushes.Transparent;
                     break;
                 default:
@@ -449,14 +506,13 @@ namespace SlideCanvas
             if (this.InkCanvasMain.ActiveEditingMode != InkCanvasEditingMode.EraseByPoint && this.InkCanvasMain.ActiveEditingMode != InkCanvasEditingMode.EraseByStroke)
                 prevState = this.InkCanvasMain.ActiveEditingMode;
             double width = e.GetTouchPoint(null).Bounds.Width;
-            if (width > 20)
+            if (width > this.sldSize.Value)
             {
-                this.InkCanvasMain.EraserShape = new EllipseStylusShape(width, width * 16 / 9);
+                this.InkCanvasMain.EraserShape = new RectangleStylusShape(width, width * 16 / 9);
                 InkCanvasMain.EditingMode = InkCanvasEditingMode.EraseByPoint;
             }
             else
             {
-                InkCanvasMain.EditingMode = InkCanvasEditingMode.None;
             }
         }
 
@@ -472,6 +528,24 @@ namespace SlideCanvas
             else
                 (ToolPanel.Parent as Border).VerticalAlignment = VerticalAlignment.Bottom;
 
+        }
+
+        private void Window_Deactivated(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        {
+            Window window = (Window)sender;
+            window.Topmost = true;
+        }
+
+        private void ItemClick(object sender, ModernWpf.Controls.ItemClickEventArgs e)
+        {
+            int index = lvSlides.Items.IndexOf(e.ClickedItem);
+            lvSlides.SelectedValue = index;
+            ppt.Goto(index + 1);
+        }
+
+        private void RefreshIP(object sender, RoutedEventArgs e)
+        {
+            this.lblIP.Content = ppt.ShowUrl();
         }
     }
 }
