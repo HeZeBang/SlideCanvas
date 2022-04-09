@@ -541,6 +541,7 @@ namespace SlideCanvas
             int index = lvSlides.Items.IndexOf(e.ClickedItem);
             lvSlides.SelectedValue = index;
             ppt.Goto(index + 1);
+            //ToggleVisibility(bdrSlide, Visibility.Collapsed);
         }
 
         private void RefreshIP(object sender, RoutedEventArgs e)

@@ -1,0 +1,117 @@
+@font-face {
+  font-family: "iconfont"; /* Project id  */
+  src: url('iconfont.ttf?t=1649063874654') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-reply:before {
+  content: "\e63c";
+}
+
+.icon-add:before {
+  content: "\e64e";
+}
+
+.icon-angle-left:before {
+  content: "\ef19";
+}
+
+.icon-angle-right:before {
+  content: "\ef1f";
+}
+
+.icon-arrows-alt:before {
+  content: "\ef28";
+}
+
+.icon-backspace:before {
+  content: "\ef2f";
+}
+
+.icon-bars:before {
+  content: "\ef34";
+}
+
+.icon-cogs:before {
+  content: "\ef7b";
+}
+
+.icon-cog:before {
+  content: "\ef7d";
+}
+
+.icon-eraser:before {
+  content: "\efb1";
+}
+
+.icon-file-import:before {
+  content: "\efc8";
+}
+
+.icon-file-powerpoint:before {
+  content: "\efcc";
+}
+
+.icon-folder-open:before {
+  content: "\efdc";
+}
+
+.icon-grip-vertical:before {
+  content: "\efff";
+}
+
+.icon-hand-pointer:before {
+  content: "\f005";
+}
+
+.icon-info:before {
+  content: "\f02a";
+}
+
+.icon-list-ul:before {
+  content: "\f039";
+}
+
+.icon-mouse-pointer:before {
+  content: "\f05a";
+}
+
+.icon-pen:before {
+  content: "\f06c";
+}
+
+.icon-power-off:before {
+  content: "\f087";
+}
+
+.icon-save:before {
+  content: "\f0a6";
+}
+
+.icon-step-backward:before {
+  content: "\f0d7";
+}
+
+.icon-step-forward:before {
+  content: "\f0d8";
+}
+
+.icon-vector-square:before {
+  content: "\f144";
+}
+
+.icon-window-close:before {
+  content: "\f156";
+}
+
+.icon-window-minimize:before {
+  content: "\f158";
+}
+
