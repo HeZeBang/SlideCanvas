@@ -41,6 +41,12 @@
           "lib/netstandard1.0/_._": {}
         }
       },
+      "Microsoft.UI.Xaml/2.7.1": {
+        "type": "package",
+        "build": {
+          "buildTransitive/Microsoft.UI.Xaml.props": {}
+        }
+      },
       "Microsoft.Win32.Registry/5.0.0": {
         "type": "package",
         "dependencies": {
@@ -1064,6 +1070,37 @@
         "microsoft.netcore.targets.1.1.0.nupkg.sha512",
         "microsoft.netcore.targets.nuspec",
         "runtime.json"
+      ]
+    },
+    "Microsoft.UI.Xaml/2.7.1": {
+      "sha512": "/1F1uNcaPInSZRiiy2xcEgQjVWCq3G4pf54XYAMuxRM1jscoUVMEhthz5wSJeH2MKrnYKjtTh1sHlep/UzM05A==",
+      "type": "package",
+      "path": "microsoft.ui.xaml/2.7.1",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/Common.targets",
+        "build/Microsoft.UI.Xaml.props",
+        "build/MicrosoftUIXamlVersion.props",
+        "build/native/Microsoft.UI.Xaml.targets",
+        "buildTransitive/Common.targets",
+        "buildTransitive/Microsoft.UI.Xaml.props",
+        "buildTransitive/MicrosoftUIXamlVersion.props",
+        "lib/uap10.0/Design/Microsoft.UI.Xaml.Design.dll",
+        "lib/uap10.0/Microsoft.UI.Xaml.pri",
+        "lib/uap10.0/Microsoft.UI.Xaml.winmd",
+        "lib/uap10.0/Microsoft.UI.Xaml.xml",
+        "lib/uap10.0/Microsoft.UI.Xaml/Themes/Generic.xaml",
+        "license.txt",
+        "microsoft.ui.xaml.2.7.1.nupkg.sha512",
+        "microsoft.ui.xaml.nuspec",
+        "readme.txt",
+        "tools/AppX/arm/Release/Microsoft.UI.Xaml.2.7.appx",
+        "tools/AppX/arm64/Release/Microsoft.UI.Xaml.2.7.appx",
+        "tools/AppX/x64/Release/Microsoft.UI.Xaml.2.7.appx",
+        "tools/AppX/x86/Release/Microsoft.UI.Xaml.2.7.appx",
+        "tools/VisualStudioToolsManifest.xml"
       ]
     },
     "Microsoft.Win32.Registry/5.0.0": {
@@ -3443,6 +3480,7 @@
   "projectFileDependencyGroups": {
     "net6.0-windows10.0.18362": [
       "Microsoft.AspNetCore.Owin >= 6.0.3",
+      "Microsoft.UI.Xaml >= 2.7.1",
       "ModernWpfUI >= 0.9.4",
       "QRCoder >= 1.4.3",
       "SkiaSharp.QrCode >= 0.4.1",
@@ -3491,6 +3529,10 @@
           "Microsoft.AspNetCore.Owin": {
             "target": "Package",
             "version": "[6.0.3, )"
+          },
+          "Microsoft.UI.Xaml": {
+            "target": "Package",
+            "version": "[2.7.1, )"
           },
           "ModernWpfUI": {
             "target": "Package",

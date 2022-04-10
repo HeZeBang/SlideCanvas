@@ -17,6 +17,7 @@
       "Microsoft.CSharp/4.7.0": {},
       "Microsoft.NETCore.Platforms/5.0.0": {},
       "Microsoft.NETCore.Targets/1.1.0": {},
+      "Microsoft.UI.Xaml/2.7.1": {},
       "Microsoft.Win32.Registry/5.0.0": {
         "dependencies": {
           "System.Security.AccessControl": "5.0.0",
@@ -881,6 +882,13 @@
       "sha512": "sha512-aOZA3BWfz9RXjpzt0sRJJMjAscAUm3Hoa4UWAfceV9UTYxgwZ1lZt5nO2myFf+/jetYQo4uTP7zS8sJY67BBxg==",
       "path": "microsoft.netcore.targets/1.1.0",
       "hashPath": "microsoft.netcore.targets.1.1.0.nupkg.sha512"
+    },
+    "Microsoft.UI.Xaml/2.7.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-/1F1uNcaPInSZRiiy2xcEgQjVWCq3G4pf54XYAMuxRM1jscoUVMEhthz5wSJeH2MKrnYKjtTh1sHlep/UzM05A==",
+      "path": "microsoft.ui.xaml/2.7.1",
+      "hashPath": "microsoft.ui.xaml.2.7.1.nupkg.sha512"
     },
     "Microsoft.Win32.Registry/5.0.0": {
       "type": "package",

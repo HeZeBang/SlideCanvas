@@ -140,6 +140,7 @@ namespace SlideCanvas
                         try
                         {
                             T(T(this.presentation.SlideShowWindow).View).Next();
+                            presentation.SlideShowWindow.Activate();
                             GetNum();
                             hasRun = true;
                         }
@@ -208,7 +209,7 @@ namespace SlideCanvas
             {
                 try
                 {
-                    T(T(this.presentation.SlideShowWindow).View).GotoSlide(pagenum, 0);
+                    T(T(this.presentation.SlideShowWindow).View).GotoSlide(pagenum);
                 }
                 catch { }
             }
@@ -256,7 +257,7 @@ namespace SlideCanvas
             {
                 if (this.presentation != null)
                 {
-                    //T(this.presentation.Application).Quit();
+                    // T(this.presentation.Application).Quit();
                     T(T(presentation.SlideShowWindow).View).Exit();
                     this.presentation = null;
                 }
@@ -286,7 +287,9 @@ namespace SlideCanvas
             DirectoryInfo di = new DirectoryInfo(Directory.GetCurrentDirectory() + "\\wwwroot\\Slides");
             if (di.Exists)
             {
-                di.Delete(true);
+                try
+                { di.Delete(true); }
+                catch { }
                 Task.Run(() =>
                 {
                     ExportAsPng();
@@ -367,6 +370,7 @@ namespace SlideCanvas
                 return false;
             }
             T(T(presentation.SlideShowWindow).View).Next();
+            presentation.SlideShowWindow.Activate();
             return true;
         }
         internal bool Insert(int page)

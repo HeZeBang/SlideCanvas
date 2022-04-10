@@ -9,5 +9,7 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("favicon.ico")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/sample.pptx")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("wwwroot/logo.ico")]
 
 

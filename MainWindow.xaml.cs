@@ -56,17 +56,17 @@ namespace SlideCanvas
 
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
-            InitAsync();
+            ppt = new();
+            InitAsync(Environment.GetCommandLineArgs());
 
             ToggleButton(btnPen, new RoutedEventArgs());
             Excp("WELCOME", "TO SLIDECANVAS");
             InkCanvasMain.Strokes.StrokesChanged += Strokes_StrokesChanged;
         }
 
-        private async void InitAsync()
+        private async void InitAsync(string[] pargs)
         {
-            ppt = new();
-
+            lvSlides.Items.Clear();
             this.RadArr.IsChecked = true;
             ToggleArrow(RadArr, new RoutedEventArgs());
 
@@ -88,18 +88,33 @@ namespace SlideCanvas
             bmpIP.Source = bitmapImage;
             lblIP.Content = ppt.ip;
             Topmost = true;
-            string[] pargs = Environment.GetCommandLineArgs();
-            if (pargs.Length > 1)
+            ToggleVisibility(bdrLoad, Visibility.Visible);
+            if (pargs.Length <= 1)
             {
-                ToggleVisibility(bdrLoad, Visibility.Visible);
                 await Task.Run(() =>
                 {
 
                     Task task = new(() =>
+                    {
+                        ppt.OpenFile(Directory.GetCurrentDirectory() + "\\Resources\\Sample.pptx");
+                        ppt.GetNum();
+                    });
+                    task.Start();
+                    slidestroke.Clear();
+                    tempList.Clear();
+                });
+            }
+            else
+            {
+                await Task.Run(() =>
                 {
-                            ppt.OpenFile(pargs[1]);
-                            ppt.GetNum();
-                        });
+
+                    Task task = new(() =>
+                    {
+                        ppt.OpenFile(pargs[1]);
+                        OpenStrokes(pargs[1].Split('.')[0] + ".scs");
+                        ppt.GetNum();
+                    });
                     task.Start();
                     slidestroke.Clear();
                     tempList.Clear();
@@ -110,7 +125,6 @@ namespace SlideCanvas
                 timer.Start();
             }
 
-            lvSlides.Items.Clear();
             for (int i = 0; i < ppt.totpg; i++)
                 lvSlides.Items.Add(new Image() { Height = 108, Width = 192, Margin = new Thickness(5) });
         }
@@ -169,23 +183,34 @@ namespace SlideCanvas
                                 lvSlides.Items.Add(new Image() { Height = 108, Width = 192, Margin = new Thickness(5) });
                             //lvSlides.Items.Clear();
                             // lvSlides.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Tag", System.ComponentModel.ListSortDirection.Ascending));
-                            int idx = 0;
                             foreach (var item in files)
                             {
-                                /*idx++;
-                                ListViewItem lvi = new();
-                                Grid sp = new();
-                                sp.Background = Brushes.Transparent;
-                                sp.Children.Add(new Image() { Source = new BitmapImage(new Uri(item)), Height = 108, Width = 192 });
-                                sp.Children.Add(new Label() { Content = string.Format("Slide - {0}", idx) });
-                                lvi.Content = sp;
-                                lvSlides.Items.Add(new Image() { Source = new BitmapImage(new Uri(item)), Height = 108, Width = 192, Margin = new Thickness(5), Tag = Convert.ToInt32(item.Trim('.').Replace("幻灯片", "").Replace("Slide", "")) });
-                                lvSlides.Items.Add(lvi);*/
-                                //System.Diagnostics.Debug.WriteLine((item.Replace(Directory.GetCurrentDirectory() + "\\wwwroot\\Slides\\", "").Replace("幻灯片", "").Replace("Slide", "").Replace(".PNG", "")));
-                                (lvSlides.Items[Convert.ToInt32(item.Replace(Directory.GetCurrentDirectory() + "\\wwwroot\\Slides\\", "").Replace("幻灯片", "").Replace("Slide", "").Replace(".PNG", "")) - 1] as Image).Source = new BitmapImage(new Uri(item));
+                                int idx = Convert.ToInt32(item.Replace(Directory.GetCurrentDirectory() + "\\wwwroot\\Slides\\", "").Replace("幻灯片", "").Replace("Slide", "").Replace(".PNG", "")) - 1;
+                                if (idx >= ppt.totpg)
+                                    continue;
+                                BitmapImage bitmapImage = null;
+                                using (BinaryReader reader = new BinaryReader(File.Open(item, FileMode.Open)))
+                                {
+                                    try
+                                    {
+
+                                        FileInfo fi = new FileInfo(item);
+                                        byte[] bytes = reader.ReadBytes((int)fi.Length);
+                                        reader.Close();
+
+                                        bitmapImage = new BitmapImage();
+                                        bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+
+                                        bitmapImage.BeginInit();
+                                        bitmapImage.StreamSource = new MemoryStream(bytes);
+                                        bitmapImage.EndInit();
+                                    }
+                                    catch (Exception) { }
+                                }
+                                (lvSlides.Items[idx] as Image).Source = bitmapImage;
                             }
-                            
-                            
+
+
                             //lvSlides.Items.IsLiveSorting = true;
                             ToggleVisibility(bdrLoad, 500);
                         }
@@ -374,7 +399,7 @@ namespace SlideCanvas
         {
             Border bdr = bdrInfo;
             ((bdr.Child as StackPanel).Children[0] as Label).Content = title;
-            (((bdr.Child as StackPanel).Children[1] as Border).Child as Label).Content = content;
+            (((bdr.Child as StackPanel).Children[1] as Border).Child as TextBlock).Text = content;
             ToggleVisibility(bdr, 2000);
         }
 
@@ -410,7 +435,7 @@ namespace SlideCanvas
                     lblSpot.Content = string.Format("网络名称: {0}\n密码: {1}\n验证方式: {2}\n加密方式: {3}\n", access.Ssid, access.Passphrase, connectionProfile.NetworkSecuritySettings.NetworkAuthenticationType.ToString(), connectionProfile.NetworkSecuritySettings.NetworkEncryptionType.ToString());
                     this.lblIP.Content = ppt.ShowUrl();
                     QRCodeGenerator qrGenerator = new QRCodeGenerator();
-                    QRCodeData qrCodeData = qrGenerator.CreateQrCode(string.Format("WIFI:T:{0};S:{1};P:{2};;", connectionProfile.NetworkSecuritySettings.NetworkEncryptionType.ToString(), access.Ssid, access.Passphrase), QRCodeGenerator.ECCLevel.Q);
+                    QRCodeData qrCodeData = qrGenerator.CreateQrCode(string.Format("WIFI:T:{0};S:{1};P:{2};;", /*connectionProfile.NetworkSecuritySettings.NetworkEncryptionType.ToString()*/"WPA", access.Ssid, access.Passphrase), QRCodeGenerator.ECCLevel.Q);
                     QRCode qrCode = new QRCode(qrCodeData);
                     System.Drawing.Bitmap ImageOriginalBase = qrCode.GetGraphic(20);
                     BitmapImage bitmapImage = new BitmapImage();
@@ -462,7 +487,9 @@ namespace SlideCanvas
 
         private void About(object sender, RoutedEventArgs e)
         {
-            Excp("芜湖~", "Made by ZAMBAR~");
+            Excp("芜湖~", string.Format("Made by ZAMBAR~\n" +
+                "Github repo https://github.com/HeZeBang/SlideCanvas\n" + 
+                "程序集版本: {0}", Assembly.GetExecutingAssembly().GetName().Version.ToString()));
         }
 
         private void ToggleArrow(object sender, RoutedEventArgs e)
@@ -568,13 +595,21 @@ namespace SlideCanvas
                 {
                     string filename = openFileDialog.FileName;
 
-                    /*if (ppt.presentation != null)
+                    if (ppt.totpg > 0)
                     {
-                        System.Diagnostics.Process.Start("start SlideCanvas.exe " + filename);
-                        ppt.Shut();
-                    }*/
-                    ppt.OpenFile(filename);
-                    ppt.FetchInnerText();
+                        List<string> lst = new();
+                        lst.Add("");
+                        lst.Add(filename);
+                        string[] pargs = lst.ToArray();
+                        //ppt.Clear();
+                        InitAsync(pargs);
+                    }
+                    else
+                    {
+                        ppt.OpenFile(filename);
+                        OpenStrokes(filename.Split('.')[0] + ".scs");
+                        ppt.FetchInnerText();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -593,7 +628,8 @@ namespace SlideCanvas
         private void AddPage(object sender, RoutedEventArgs e)
         {
             ppt.Insert();
-            this.lvSlides.Items.Insert(ppt.curpg, new Image() { Height = 108, Width = 192, Margin = new Thickness(5) });
+            this.lvSlides.Items.Insert(ppt.curpg, new Image() { Height = 108, Width = 192, Margin = new Thickness(5), Source = new BitmapImage(new Uri("pack://application:,,,/Resources/SlideCanvas.png")) });
+            this.slidestroke.Insert(ppt.curpg + 1, new StrokeCollection());
             ppt.Next();
         }
 
@@ -602,11 +638,52 @@ namespace SlideCanvas
             var sfd = new System.Windows.Forms.SaveFileDialog();
             sfd.Filter = "SlideCanvas 笔画文件|*.scs";
             var res = sfd.ShowDialog();
-            if(res == System.Windows.Forms.DialogResult.OK)
+            if (res == System.Windows.Forms.DialogResult.OK)
             {
-                File.WriteAllText(sfd.FileName, JsonSerializer.Serialize(this.InkCanvasMain.Strokes));
+                File.WriteAllText(sfd.FileName, JsonSerializer.Serialize(this.slidestroke));
             }
-            
+
+        }
+
+        private void ToggleMenu(object sender, RoutedEventArgs e)
+        {
+            ToggleVisibility(bdrFile);
+        }
+
+        private void OpenStrokes(object sender, RoutedEventArgs e)
+        {
+            var openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            openFileDialog.Filter = "SlideCanvas 笔画文件|*.scs|所有文件|*.*";
+            var result = openFileDialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                if (!File.Exists(openFileDialog.FileName))
+                    return;
+                string s = File.ReadAllText(openFileDialog.FileName);
+                try
+                {
+                    this.slidestroke = new(JsonSerializer.Deserialize<List<StrokeCollection>>(s));
+                }
+                catch (Exception ex)
+                {
+                    Excp("啊这", ex.Message);
+                }
+            }
+            ToggleVisibility(bdrFile, Visibility.Collapsed);
+        }
+        private void OpenStrokes(string filename)
+        {
+            if (!File.Exists(filename))
+                return;
+            string s = File.ReadAllText(filename);
+            try
+            {
+                this.slidestroke = new(JsonSerializer.Deserialize<List<StrokeCollection>>(s));
+            }
+            catch (Exception ex)
+            {
+                Excp("啊这", ex.Message);
+            }
         }
     }
 }

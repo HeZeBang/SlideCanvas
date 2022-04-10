@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SlideCanvas"
+        xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         mc:Ignorable="d"
         ui:ThemeManager.IsThemeAware="True"
@@ -24,11 +25,11 @@
     <Grid x:Name="grdMain" Background="Transparent">
         <Border Background="Transparent">
             <InkCanvas x:Name="InkCanvasMain" Background="Transparent" GotFocus="CanvasFoc" SelectionChanged="CanvasSeleChanged" TouchDown="CanvasTouchDown" TouchUp="CanvasPTouchUp"/>
-        </Border>   
+        </Border>
         <Border x:Name="bdrLoad" Background="#AA000000" >
             <Label FontFamily="Microsoft YaHei Light" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="48" Foreground="White" Content="初始化中"/>
         </Border>
-        
+
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"></ColumnDefinition>
@@ -45,15 +46,29 @@
                         <Button x:Name="btnOpen" Height="55" Width="55" Foreground="White" Content="&#xefdc;" FontSize="30" FontFamily="./Resources/#iconfont" Click="OpenFile"/>
                     </Border-->
                     <Border CornerRadius="3" Height="55" Width="55">
-                        <Button x:Name="btnSave" Height="55" Width="55" Foreground="White" Content="&#xf087;" FontSize="30" FontFamily="./Resources/#iconfont" Click="Save"/>
-                    </Border>
-                    <Border CornerRadius="3" Height="55" Width="55">
-                        <Button x:Name="btnExit" Height="55" Width="55" Foreground="White" Content="&#xf087;" FontSize="30" FontFamily="./Resources/#iconfont" Click="Exit"/>
-                    </Border>
-                    <Border CornerRadius="3" Height="55" Width="55">
-                        <Button x:Name="btnInfo" Height="55" Width="55" Foreground="White" Content="&#xf02a;" FontSize="30" FontFamily="./Resources/#iconfont" Click="About"/>
+                        <Button Height="55" Width="55" Foreground="White" Content="&#xef34;" FontSize="30" FontFamily="./Resources/#iconfont" Click="ToggleMenu"/>
                     </Border>
                 </WrapPanel>
+            </Border>
+            <Border x:Name="bdrFile" CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" Grid.Column="0" Width="Auto" Height="Auto" Margin="10,10,10,80" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
+                </Border.Effect>
+                <Grid>
+                    <Label Content="菜单" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" FontFamily="Microsoft YaHei UI Light"></Label>
+                    <Border CornerRadius="5" Background="{DynamicResource SystemControlBackgroundAltHighRevealBackgroundBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,40,5,5" BorderBrush="{DynamicResource GridViewItemRevealBorderBrush}" BorderThickness="1,1,1,1">
+                        <Border.Effect>
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
+                        </Border.Effect>
+                        <StackPanel Margin="5">
+                            <Button Height="50" Background="Transparent" HorizontalAlignment="Stretch" Content="&#xefcc; 打开PPT" FontSize="20" FontFamily="./Resources/#iconfont, Microsoft Yahei Light" HorizontalContentAlignment="Left" Click="OpenFile"/>
+                            <Button Height="50" Background="Transparent" HorizontalAlignment="Stretch" Content="&#xefc8; 导入笔迹" FontSize="20" FontFamily="./Resources/#iconfont, Microsoft Yahei Light" HorizontalContentAlignment="Left" Click="OpenStrokes"/>
+                            <Button Height="50" Background="Transparent" HorizontalAlignment="Stretch" Content="&#xf0a6; 保存笔迹" FontSize="20" FontFamily="./Resources/#iconfont, Microsoft Yahei Light" HorizontalContentAlignment="Left" Click="Save"/>
+                            <Button Height="50" Background="Transparent" HorizontalAlignment="Stretch" Content="&#xf02a; 关于" FontSize="20" FontFamily="./Resources/#iconfont, Microsoft Yahei Light" HorizontalContentAlignment="Left" Click="About"/>
+                            <Button Height="50" Background="Transparent" HorizontalAlignment="Stretch" Content="&#xf156; 退出" FontSize="20" FontFamily="./Resources/#iconfont, Microsoft Yahei Light" HorizontalContentAlignment="Left" Click="Exit"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
             </Border>
             <Border CornerRadius="3" Background="{DynamicResource SystemControlBackgroundAltMediumHighBrush}" Height="65" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,5" HorizontalAlignment="Left">
                 <Border.Effect>
@@ -173,7 +188,7 @@
                         <StackPanel>
                             <RadioButton x:Name="RadSlc" GroupName="Arrow" Margin="3,5,0,0" Checked="ToggleArrow" IsChecked="True" >选择</RadioButton>
                             <RadioButton x:Name="RadArr" GroupName="Arrow" Margin="3,5,0,0" Checked="ToggleArrow" >鼠标</RadioButton>
-                            
+
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -250,13 +265,8 @@
                             <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                         </Border.Effect>
                         <ui:ScrollViewerEx PanningMode="VerticalOnly" Height="500">
-                            <ui:ListView x:Name="lvSlides" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" ItemClick="ItemClick" IsItemClickEnabled="True">
-                                <!--ListViewItem x:Name="lviSample">
-                                    <StackPanel Orientation="Vertical">
-                                        <Image Source="/Resources/SlideCanvas.png" Width="144" Height="81"/>
-                                        <TextBlock TextAlignment="Center">Test</TextBlock>
-                                    </StackPanel>
-                                </ListViewItem-->
+                            <ui:ListView x:Name="lvSlides" ItemsSource="{Binding}" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" ItemClick="ItemClick" IsItemClickEnabled="True">
+                                
                             </ui:ListView>
                         </ui:ScrollViewerEx>
                     </Border>
@@ -272,7 +282,7 @@
                         <Border.Effect>
                             <DropShadowEffect ShadowDepth="2" BlurRadius="6" Direction="-40" Opacity="0.8" RenderingBias="Performance" Color="{DynamicResource SystemChromeHighColor}"/>
                         </Border.Effect>
-                        <Label x:Name="infContent" Content="Content" Margin="5,5,5,5" FontFamily="Microsoft YaHei UI"/>
+                        <TextBlock x:Name="infContent" Text="Content" Margin="5,5,5,5" FontFamily="Consolas, Microsoft YaHei UI" TextWrapping="WrapWithOverflow"/>
                     </Border>
                     <!--Rectangle
                 RadiusX="4"
@@ -297,7 +307,7 @@
                             <Button x:Name="btnPrev" Content="&#xef19;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="55" Click="PageChange" FontWeight="Normal"/>
                         </Border>
                         <Border  CornerRadius="3" Height="55" Width="55" Background="OrangeRed">
-                            <Button x:Name="btnPage" Content="&#xefc8;&#x0a;导入" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="55" Click="PageClick" FontStyle="Normal" FontWeight="Normal" FontStretch="Medium"/>
+                            <Button x:Name="btnPage" Content="&#xefc8;&#x0a;打开" FontFamily="./Resources/#iconfont, Microsoft Yahei Light" Foreground="White" Height="55" Width="55" Click="PageClick" FontStyle="Normal" FontWeight="Normal" FontStretch="Medium"/>
                         </Border>
                         <Border  CornerRadius="3" Height="55" Width="55" >
                             <Button x:Name="btnNext" Content="&#xef1f;" FontSize="30" FontFamily="./Resources/#iconfont" Foreground="White" Height="55" Width="55" Click="PageChange"/>

@@ -5,6 +5,8 @@
              xmlns:ui="http://schemas.modernwpf.com/2019"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+
+
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemeResources >
@@ -27,6 +29,8 @@
                 <ui:XamlControlsResources />
 
                 <ui:IntellisenseResources Source="/ModernWpf;component/DesignTime/DesignTimeResources.xaml" />
+                
+                
 
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
